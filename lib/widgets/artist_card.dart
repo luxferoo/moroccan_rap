@@ -35,7 +35,7 @@ class ArtistCard extends StatelessWidget {
             }
 
             return Container(
-              margin: EdgeInsets.all(5.0),
+              margin: EdgeInsets.all(0.5),
               child: InkWell(
                 child: Container(
                   height: height,

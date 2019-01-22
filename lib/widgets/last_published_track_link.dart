@@ -27,15 +27,25 @@ class LastPublishedTrackLink extends StatelessWidget {
               return Container();
             }
             return Container(
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              margin: EdgeInsets.symmetric(horizontal: 0.5),
               child: Stack(
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
-                  CachedNetworkImage(
-                    height: 120,
-                    width: 120,
-                    fit: BoxFit.cover,
-                    imageUrl: trackSnapshot.data.picture,
+                  DecoratedBox(
+                    position: DecorationPosition.foreground,
+                    decoration: new BoxDecoration(
+                      gradient: new LinearGradient(
+                        begin: Alignment(0.0, 1.2),
+                        end: Alignment(0.0, -0.5),
+                        colors: <Color>[Colors.black, Colors.transparent],
+                      ),
+                    ),
+                    child: CachedNetworkImage(
+                      height: 120,
+                      width: 120,
+                      fit: BoxFit.cover,
+                      imageUrl: trackSnapshot.data.picture,
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.all(5.0),
