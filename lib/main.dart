@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/home.dart';
 import 'blocs/artist_provider.dart';
 import 'blocs/track_provider.dart';
 import 'screens/my_navigator.dart';
@@ -26,14 +27,22 @@ class App extends StatelessWidget {
 MaterialPageRoute routes(RouteSettings setting) {
   return MaterialPageRoute(
     builder: (BuildContext context) {
+      final ArtistBloc artistBloc = ArtistProvider.of(context);
+      final TrackBloc trackBloc = TrackProvider.of(context);
+
       if (setting.name == "/") {
-        final ArtistBloc artistBloc = ArtistProvider.of(context);
-        final TrackBloc trackBloc = TrackProvider.of(context);
-        artistBloc.fetchArtistsIds();
         trackBloc.fetchLastTracksIds();
-        return MyNavigator();
+        artistBloc.fetchArtistsIds();
+        //return MyNavigator();
+        return Home();
       }
-      return ArtistDetail();
+
+      final artistDetailsRegex = RegExp(r"/artist_details/[0-9]*$");
+      if (artistDetailsRegex.hasMatch(setting.name)){
+        final artistId = int.parse(setting.name.replaceFirst('/artist_details/', ''));
+        artistBloc.fetchArtist(artistId);
+        return ArtistDetail(artistId: artistId,);
+      }
     },
   );
 }

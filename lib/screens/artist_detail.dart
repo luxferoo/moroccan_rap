@@ -4,8 +4,14 @@ import '../models/artist.dart';
 import '../widgets/track_tile.dart';
 import '../models/track.dart';
 import '../widgets/sliver_app_bar_delegate.dart';
+import '../blocs/artist_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ArtistDetail extends StatefulWidget {
+  final int artistId;
+
+  ArtistDetail({this.artistId});
+
   @override
   State<StatefulWidget> createState() => _ArtistState();
 }
@@ -34,9 +40,8 @@ class _ArtistState extends State<ArtistDetail> {
         children: <Widget>[
           CustomScrollView(
             controller: _scrollController,
-            slivers: _buildSliverContent(),
+            slivers: _buildSliverContent(context),
           ),
-          _buildFloatingActionButton()
         ],
       ),
     );
@@ -61,68 +66,62 @@ class _ArtistState extends State<ArtistDetail> {
     );
   }
 
-  Positioned _buildFloatingActionButton() {
-    final defaultTopMargin = _expandedHeight - 4.0;
-    final startScale = 96.0;
-    final endScale = startScale / 2;
-    var top = defaultTopMargin;
-    var scale = 1.0;
-
-    if (_scrollController.hasClients) {
-      final offset = _scrollController.offset;
-      top -= offset;
-      if (offset < defaultTopMargin - startScale) {
-        scale = 1.0;
-      } else if (offset < defaultTopMargin - endScale) {
-        scale = (defaultTopMargin - endScale - offset) / endScale;
-      } else {
-        scale = 0.0;
-      }
-    }
-
-    return Positioned(
-      child: Transform.scale(
-        scale: scale,
-        child: FloatingActionButton(
-          heroTag: "1-favorite",
-          backgroundColor: Colors.white,
-          onPressed: () {},
-          child: Icon(
-            Icons.favorite,
-            color: Colors.red,
-          ),
-        ),
-      ),
-      right: 16.0,
-      top: top,
-    );
-  }
-
-  Widget _buildFlexibleSpaceBar({@required Artist artist}) {
+  Widget _buildFlexibleSpaceBar(ArtistBloc bloc) {
     return FlexibleSpaceBar(
       background: Hero(
-        tag: "${artist.id}-picture",
+        tag: "${widget.artistId}-picture",
         child: DecoratedBox(
-          position: DecorationPosition.foreground,
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-              begin: Alignment(0.0, 1.2),
-              end: Alignment(0.0, -0.5),
-              colors: <Color>[Colors.black, Colors.transparent],
+            position: DecorationPosition.foreground,
+            decoration: new BoxDecoration(
+              gradient: new LinearGradient(
+                end: Alignment(1.0, 0.0),
+                begin: Alignment(0.0, -2),
+                colors: <Color>[Colors.black, Colors.transparent],
+              ),
             ),
-          ),
-          child: Image.network(
-            "https://cdn.nrjmaroc.com/images/artists/dizzy-dros1513958560.png",
-            fit: BoxFit.cover,
-            height: 5000,
-            width: 5000,
-          ),
-        ),
+            child: StreamBuilder(
+              stream: bloc.artist,
+              builder: (BuildContext context,
+                  AsyncSnapshot<Map<int, Future<Artist>>> snapshot) {
+                if (!snapshot.hasData) {
+                  return Container(
+                      color: Colors.black,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ));
+                }
+                return FutureBuilder(
+                  future: snapshot.data[widget.artistId],
+                  builder: (BuildContext context,
+                      AsyncSnapshot<Artist> artistSnapshot) {
+                    if (!artistSnapshot.hasData) {
+                      return Container(
+                          color: Colors.black,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ));
+                    }
+                    return CachedNetworkImage(
+                      placeholder: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: Image(
+                          image:
+                              AssetImage("assets/img/picture-placeholder.png")),
+                      imageUrl: artistSnapshot.data.picture,
+                      fit: BoxFit.cover,
+                      height: double.infinity,
+                      width: double.infinity,
+                    );
+                  },
+                );
+              },
+            )),
       ),
     );
   }
 
-  Widget _buildSliverAppBar() {
+  Widget _buildSliverAppBar(ArtistBloc artistBloc) {
     Color silverAppBarTextColor = Colors.white;
     final defaultTopMargin = _expandedHeight - 20.0;
     final startScale = 96.0;
@@ -136,30 +135,55 @@ class _ArtistState extends State<ArtistDetail> {
         silverAppBarTextColor = Colors.black;
       }
     }
-
     return SliverAppBar(
       backgroundColor: Colors.white,
       iconTheme: IconThemeData(color: silverAppBarTextColor),
-      actions: <Widget>[IconButton(icon: Icon(Icons.info), onPressed: () {})],
-      title: Hero(
-        tag: "1-name",
-        child: Material(
-          color: Colors.transparent,
-          child: Text(
-            "Dizzy Dros",
-            style: TextStyle(color: silverAppBarTextColor, fontSize: 20.0),
-          ),
-        ),
+      title: StreamBuilder(
+        stream: artistBloc.artist,
+        builder: (BuildContext context,
+            AsyncSnapshot<Map<int, Future<Artist>>> snapshot) {
+          if (!snapshot.hasData) {
+            return SizedBox();
+          }
+          return FutureBuilder(
+            future: snapshot.data[widget.artistId],
+            builder:
+                (BuildContext context, AsyncSnapshot<Artist> artistSnapshot) {
+              if (!artistSnapshot.hasData) {
+                return SizedBox();
+              }
+              return Text(
+                artistSnapshot.data.name,
+                style: TextStyle(color: silverAppBarTextColor, fontSize: 20.0),
+              );
+            },
+          );
+        },
       ),
       expandedHeight: _expandedHeight,
       pinned: true,
-      flexibleSpace: _buildFlexibleSpaceBar(artist: Artist.fromMap({})),
+      flexibleSpace: _buildFlexibleSpaceBar(artistBloc),
+      actions: <Widget>[
+        Hero(
+          child: Material(
+            color: Colors.transparent,
+            child: IconButton(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              icon: Icon(Icons.favorite,color: Colors.red,),
+              onPressed: () {},
+            ),
+          ),
+          tag: "${widget.artistId}-favorite",
+        )
+      ],
     );
   }
 
-  _buildSliverContent() {
+  _buildSliverContent(BuildContext context) {
+    final ArtistBloc artistBloc = ArtistProvider.of(context);
     final sliversContent = <Widget>[
-      _buildSliverAppBar(),
+      _buildSliverAppBar(artistBloc),
     ];
 
     final Map<String, List<Track>> tracks = {
@@ -170,7 +194,7 @@ class _ArtistState extends State<ArtistDetail> {
           "name": "Track name",
           "picture": "picture",
           "trackLink": "link",
-          "album": Album.fromMap({"name":"Album name"}),
+          "album": Album.fromMap({"name": "Album name"}),
         })
       ],
     };
@@ -201,4 +225,3 @@ class _ArtistState extends State<ArtistDetail> {
     return sliversContent;
   }
 }
-

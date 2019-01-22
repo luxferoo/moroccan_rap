@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../blocs/track_provider.dart';
 import '../models/track.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class LastPublishedTrackLink extends StatelessWidget {
   final int trackId;
@@ -25,11 +26,14 @@ class LastPublishedTrackLink extends StatelessWidget {
             if (!trackSnapshot.hasData) {
               return Container();
             }
-            return Card(
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
               child: Stack(
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
-                  Image.network(trackSnapshot.data.picture),
+                  CachedNetworkImage(
+                    imageUrl: trackSnapshot.data.picture,
+                  ),
                   Padding(
                     padding: EdgeInsets.all(5.0),
                     child: Text(

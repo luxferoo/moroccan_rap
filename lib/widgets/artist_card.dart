@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'artist_gradient_hero_picture.dart';
 import '../blocs/artist_provider.dart';
 import '../models/artist.dart';
-import 'dart:math';
 
 class ArtistCard extends StatelessWidget {
   final VoidCallback onTap;
@@ -20,7 +19,9 @@ class ArtistCard extends StatelessWidget {
       builder: (BuildContext context,
           AsyncSnapshot<Map<int, Future<Artist>>> snapshot) {
         if (!snapshot.hasData) {
-          return Card();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         return FutureBuilder(
@@ -28,16 +29,22 @@ class ArtistCard extends StatelessWidget {
           builder:
               (BuildContext context, AsyncSnapshot<Artist> artistSnapshot) {
             if (!artistSnapshot.hasData) {
-              return Card();
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
-            return Card(
+
+            return Container(
+              margin: EdgeInsets.all(5.0),
               child: InkWell(
                 child: Container(
                   height: height,
                   child: Stack(
                     fit: StackFit.expand,
                     children: <Widget>[
-                      ArtistGradientHeroPicture(artist: artistSnapshot.data,),
+                      ArtistGradientHeroPicture(
+                        artist: artistSnapshot.data,
+                      ),
                       Container(
                           alignment: Alignment.bottomCenter,
                           child: _buildTile(artistSnapshot.data))
@@ -55,30 +62,28 @@ class ArtistCard extends StatelessWidget {
 
   Widget _buildTile(Artist artist) {
     return ListTile(
-      title: Hero(
-        tag: "${artist.id}-name",
-        child: Material(
-          color: Colors.transparent,
-          child: Text(
-            artist.name,
-            style: TextStyle(color: Colors.white, fontSize: 20.0),
-          ),
-        ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+      title: Text(
+        artist.name,
+        style: TextStyle(color: Colors.white, fontSize: 13.0,fontWeight: FontWeight.bold),
+        overflow: TextOverflow.clip,
       ),
       subtitle: Text(
         artist.type,
         textAlign: TextAlign.left,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.red, fontSize: 13.0),
       ),
-      trailing: FloatingActionButton(
-        heroTag: "${artist.id}-favorite",
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        onPressed: () {},
-        child: Icon(
-          Icons.favorite,
-          color: Colors.red,
-        ),
+      trailing: InkWell(
+        child: Transform.scale(
+            scale: 0.8,
+            child: Hero(
+              tag: "${artist.id}-favorite",
+              child: Icon(
+                Icons.favorite,
+                color: Colors.red,
+              ),
+            )),
+        onTap: () {},
       ),
     );
   }

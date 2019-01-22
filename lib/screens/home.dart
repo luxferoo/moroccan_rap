@@ -22,39 +22,31 @@ class Home extends StatelessWidget {
               color: Colors.black, fontFamily: "Rock Salt", fontSize: 15.0),
         ),
         backgroundColor: Colors.white,
-        actions: <Widget>[
-          IconButton(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            icon: Icon(
-              Icons.settings,
-              color: Colors.black,
-            ),
-            onPressed: () {},
-          )
-        ],
       ),
       body: RefreshIndicator(
-        onRefresh: () {
-          return Future.delayed(Duration(seconds: 1), () {
-            return true;
-          });
-        },
         child: CustomScrollView(
-          physics: BouncingScrollPhysics(),
           slivers: <Widget>[
             SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.0),
-                child: Container(
-                  height: 100.0,
-                  child: _buildLastPublishedTracks(trackBloc),
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildSectionTitle("Recent tracks"),
+                  Container(
+                    height: 100,
+                    child: _buildLastPublishedTracks(trackBloc),
+                  ),
+                  _buildSectionTitle("Artists"),
+                ],
               ),
             ),
             _buildArtistList(artistBloc)
           ],
         ),
+        onRefresh: () {
+          return Future.delayed(Duration(seconds: 0), () {
+            artistBloc.fetchArtistsIds();
+          });
+        },
       ),
     );
   }
@@ -68,8 +60,8 @@ class Home extends StatelessWidget {
             children: <Widget>[],
           );
         }
+
         return ListView.builder(
-          physics: BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           itemCount: snapshot.data.length,
           itemBuilder: (context, index) {
@@ -92,7 +84,7 @@ class Home extends StatelessWidget {
         }
         return SliverGrid(
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 400.0,
+            maxCrossAxisExtent: 200.0,
           ),
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
@@ -100,7 +92,8 @@ class Home extends StatelessWidget {
               return ArtistCard(
                 artistId: snapshot.data[index],
                 onTap: () {
-                  Navigator.of(context).pushNamed("/artist_details");
+                  Navigator.of(context)
+                      .pushNamed("/artist_details/${snapshot.data[index]}");
                 },
               );
             },
@@ -108,6 +101,18 @@ class Home extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 13, horizontal: 2),
+      child: Text(
+        title,
+        style: TextStyle(
+            color: Colors.black, fontSize: 23, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.left,
+      ),
     );
   }
 }

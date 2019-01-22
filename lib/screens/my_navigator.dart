@@ -11,6 +11,7 @@ class _MyNavigatorState extends State<MyNavigator> {
   final List<Widget> _children = [
     Home(),
     Home(),
+    Home(),
   ];
 
   @override
@@ -21,12 +22,12 @@ class _MyNavigatorState extends State<MyNavigator> {
         child: Container(
           height: 60,
           child: BottomNavigationBar(
-            type: BottomNavigationBarType.shifting,
             onTap: onTabTapped,
             currentIndex: _currentIndex,
             items: [
-              _buildBottomNavigationBarItem(Icons.home, ""),
-              _buildBottomNavigationBarItem(Icons.queue_music, "")
+              _buildBottomNavigationBarItem(Icons.home, "Home"),
+              _buildBottomNavigationBarItem(Icons.star_half, "Beefs"),
+              _buildBottomNavigationBarItem(Icons.queue_music, "Favorite"),
             ],
           ),
         ),
@@ -39,13 +40,13 @@ class _MyNavigatorState extends State<MyNavigator> {
     return BottomNavigationBarItem(
       activeIcon: Icon(
         icon,
-        color: Colors.black,
-        size: 25.0,
+       // color: Colors.black,
+        size: 28.0,
       ),
       icon: Icon(
         icon,
         color: Colors.grey,
-        size: 25.0,
+        size: 28.0,
       ),
       title: Text(text),
     );

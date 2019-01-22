@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/artist.dart';
 
@@ -8,6 +9,7 @@ class ArtistGradientHeroPicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Hero(
       tag: "${artist.id}-picture",
       child: DecoratedBox(
@@ -19,12 +21,10 @@ class ArtistGradientHeroPicture extends StatelessWidget {
             colors: <Color>[Colors.black, Colors.transparent],
           ),
         ),
-        child: Image.network(
-          artist.picture,
-          colorBlendMode: BlendMode.darken,
+        child: CachedNetworkImage(
+          imageUrl: artist.picture,
           fit: BoxFit.cover,
-          height: 5000,
-          width: 5000,
+          errorWidget: Image(image: AssetImage("assets/img/picture-placeholder.png")),
         ),
       ),
     );
