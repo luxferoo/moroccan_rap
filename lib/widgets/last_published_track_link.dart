@@ -32,6 +32,9 @@ class LastPublishedTrackLink extends StatelessWidget {
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
                   CachedNetworkImage(
+                    height: 120,
+                    width: 120,
+                    fit: BoxFit.cover,
                     imageUrl: trackSnapshot.data.picture,
                   ),
                   Padding(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../blocs/track_provider.dart';
 import '../models/album.dart';
 import '../models/artist.dart';
 import '../widgets/track_tile.dart';
@@ -6,6 +7,7 @@ import '../models/track.dart';
 import '../widgets/sliver_app_bar_delegate.dart';
 import '../blocs/artist_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../repositories/track.dart' as TrackRepo;
 
 class ArtistDetail extends StatefulWidget {
   final int artistId;
@@ -34,17 +36,31 @@ class _ArtistState extends State<ArtistDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final artistBloc = ArtistProvider.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: <Widget>[
-          CustomScrollView(
-            controller: _scrollController,
-            slivers: _buildSliverContent(context),
-          ),
-        ],
-      ),
-    );
+        backgroundColor: Colors.white,
+        body: FutureBuilder(
+          future: TrackRepo.Track().fetchTracksByArtistId(widget.artistId),
+          builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
+            if (!snapshot.hasData) {
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  _buildSliverAppBar(artistBloc),
+                ],
+              );
+            } else {
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  _buildSliverAppBar(artistBloc),
+                  _buildTracksList(snapshot.data)
+                ],
+              );
+            }
+          },
+        ));
   }
 
   SliverPersistentHeader makeHeader(String headerText) {
@@ -84,30 +100,19 @@ class _ArtistState extends State<ArtistDetail> {
               builder: (BuildContext context,
                   AsyncSnapshot<Map<int, Future<Artist>>> snapshot) {
                 if (!snapshot.hasData) {
-                  return Container(
-                      color: Colors.black,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ));
+                  return Container(color: Colors.black);
                 }
                 return FutureBuilder(
                   future: snapshot.data[widget.artistId],
                   builder: (BuildContext context,
                       AsyncSnapshot<Artist> artistSnapshot) {
                     if (!artistSnapshot.hasData) {
-                      return Container(
-                          color: Colors.black,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ));
+                      return Container(color: Colors.black);
                     }
                     return CachedNetworkImage(
-                      placeholder: Center(
-                        child: CircularProgressIndicator(),
-                      ),
                       errorWidget: Image(
-                          image:
-                              AssetImage("assets/img/picture-placeholder.png")),
+                        image: AssetImage("assets/img/picture-placeholder.png"),
+                      ),
                       imageUrl: artistSnapshot.data.picture,
                       fit: BoxFit.cover,
                       height: double.infinity,
@@ -170,7 +175,10 @@ class _ArtistState extends State<ArtistDetail> {
             child: IconButton(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
-              icon: Icon(Icons.favorite,color: Colors.red,),
+              icon: Icon(
+                Icons.favorite,
+                color: Colors.red,
+              ),
               onPressed: () {},
             ),
           ),
@@ -180,48 +188,21 @@ class _ArtistState extends State<ArtistDetail> {
     );
   }
 
-  _buildSliverContent(BuildContext context) {
-    final ArtistBloc artistBloc = ArtistProvider.of(context);
-    final sliversContent = <Widget>[
-      _buildSliverAppBar(artistBloc),
-    ];
-
-    final Map<String, List<Track>> tracks = {
-      "3ali Potter": [
-        Track.fromMap({
-          "id": 1,
-          "trackId": 1,
-          "name": "Track name",
-          "picture": "picture",
-          "trackLink": "link",
-          "album": Album.fromMap({"name": "Album name"}),
-        })
-      ],
-    };
-
-    tracks.forEach((String album, List<Track> tracks) {
-      sliversContent.add(
-        makeHeader('Album : $album , ${tracks.length} tracks'),
-      );
-      sliversContent.add(
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, index) {
-              return Column(
-                children: <Widget>[
-                  TrackTile(track: tracks[index]),
-                  Divider(
-                    height: 0.0,
-                  )
-                ],
-              );
-            },
-            childCount: tracks.length,
-          ),
-        ),
-      );
-    });
-
-    return sliversContent;
+  _buildTracksList(List<Track> tracks) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, index) {
+          return Column(
+            children: <Widget>[
+              TrackTile(track: tracks[index]),
+              Divider(
+                height: 0.0,
+              )
+            ],
+          );
+        },
+        childCount: tracks.length,
+      ),
+    );
   }
 }

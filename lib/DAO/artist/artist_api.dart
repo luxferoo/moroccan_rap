@@ -13,9 +13,9 @@ class ArtistApi {
             {
               "id": id,
               "picture":
-                  "https://scontent.fcmn2-1.fna.fbcdn.net/v/t1.0-9/12359965_1537535693223879_2806028389647671228_n.jpg?_nc_cat=110&_nc_ht=scontent.fcmn2-1.fna&oh=e7fe5f7c03cf5d6ab8e730d8d74a7616&oe=5CB52F56",
-              "name": "Pause Flow",
-              "type": "solo"
+                  "http://qgprod.com/wp-content/uploads/2013/10/shayfeen-ep-.jpg",
+              "name": "Shayfeen",
+              "type": "Crew"
             },
           ),
     );

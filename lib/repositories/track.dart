@@ -9,6 +9,10 @@ class Track {
     return trackApi.fetchLastIds();
   }
 
+  Future<List<TrackModel.Track>> fetchTracksByArtistId(int id) {
+    return trackApi.fetchTracksByArtistId(id);
+  }
+
   Future<TrackModel.Track> fetchItem(int id) async {
     return trackApi.fetchItem(id);
   }
