@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'artist_gradient_hero_picture.dart';
 import '../blocs/artist_provider.dart';
 import '../models/artist.dart';
+import '../Helpers/string.dart';
 
 class ArtistCard extends StatelessWidget {
   final VoidCallback onTap;
@@ -64,26 +65,12 @@ class ArtistCard extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
       title: Text(
-        artist.name,
-        style: TextStyle(color: Colors.white, fontSize: 13.0,fontWeight: FontWeight.bold),
-        overflow: TextOverflow.clip,
+        cropText(capitalize(artist.name), 10),
+        style: TextStyle(color: Colors.white, fontSize: 15.0),
       ),
       subtitle: Text(
         artist.type,
-        textAlign: TextAlign.left,
         style: TextStyle(color: Colors.red, fontSize: 13.0),
-      ),
-      trailing: InkWell(
-        child: Transform.scale(
-            scale: 0.8,
-            child: Hero(
-              tag: "${artist.id}-favorite",
-              child: Icon(
-                Icons.favorite,
-                color: Colors.red,
-              ),
-            )),
-        onTap: () {},
       ),
     );
   }

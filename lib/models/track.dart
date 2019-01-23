@@ -6,6 +6,7 @@ class Track {
   final int artistId;
   final Album album;
   final String name;
+  final String artistName;
   final String picture;
   final String trackLink ;
 
@@ -15,6 +16,7 @@ class Track {
         artistId = parsedJson["artistId"],
         album = parsedJson["album"],
         name = parsedJson["name"],
+        artistName = parsedJson["artistName"],
         picture = parsedJson["picture"],
         trackLink = parsedJson["trackLink"];
 }

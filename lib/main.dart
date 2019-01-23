@@ -14,6 +14,7 @@ class App extends StatelessWidget {
       child: ArtistProvider(
         child: MaterialApp(
           theme: ThemeData(
+            fontFamily: "Montserrat Regular",
             primarySwatch: Colors.red,
           ),
           debugShowCheckedModeBanner: false,

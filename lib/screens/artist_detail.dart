@@ -168,23 +168,6 @@ class _ArtistState extends State<ArtistDetail> {
       expandedHeight: _expandedHeight,
       pinned: true,
       flexibleSpace: _buildFlexibleSpaceBar(artistBloc),
-      actions: <Widget>[
-        Hero(
-          child: Material(
-            color: Colors.transparent,
-            child: IconButton(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              icon: Icon(
-                Icons.favorite,
-                color: Colors.red,
-              ),
-              onPressed: () {},
-            ),
-          ),
-          tag: "${widget.artistId}-favorite",
-        )
-      ],
     );
   }
 

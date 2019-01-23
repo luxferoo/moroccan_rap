@@ -19,7 +19,10 @@ class Home extends StatelessWidget {
         title: Text(
           "Moroccan Rap",
           style: TextStyle(
-              color: Colors.black, fontFamily: "Rock Salt", fontSize: 15.0),
+            color: Colors.black,
+            fontFamily: "Rock Salt",
+            fontSize: 15.0,
+          ),
         ),
         backgroundColor: Colors.white,
       ),
@@ -32,7 +35,7 @@ class Home extends StatelessWidget {
                 children: <Widget>[
                   _buildSectionTitle("Recent tracks"),
                   Container(
-                    height: 100,
+                    height: 270,
                     child: _buildLastPublishedTracks(trackBloc),
                   ),
                   _buildSectionTitle("Artists"),
@@ -66,7 +69,11 @@ class Home extends StatelessWidget {
           itemCount: snapshot.data.length,
           itemBuilder: (context, index) {
             bloc.fetchTrack(snapshot.data[index]);
-            return LastPublishedTrackLink(trackId: snapshot.data[index]);
+            return Card(
+                child: Container(
+                    child:
+                        LastPublishedTrackLink(trackId: snapshot.data[index]),
+                    width: 200));
           },
         );
       },
@@ -82,6 +89,7 @@ class Home extends StatelessWidget {
             padding: EdgeInsets.all(0.0),
           );
         }
+
         return SliverGrid(
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 200.0,

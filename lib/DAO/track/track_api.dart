@@ -13,6 +13,7 @@ class TrackApi {
         "id": i,
         "trackId": i,
         "name": "7it 3arfini",
+        "artistName": "shayfeen",
         "picture": "https://i.ytimg.com/vi/odpypeUvxHw/hqdefault.jpg",
         "trackLink": "link",
         "album": Album.fromMap({"name": "Album name"}),
@@ -25,7 +26,8 @@ class TrackApi {
     return Track.fromMap({
       "id": id,
       "trackId": id,
-      "name": "Itoub",
+      "name": "itoub",
+      "artistName": "Don bigg",
       "picture": "https://i.ytimg.com/vi/odpypeUvxHw/hqdefault.jpg",
       "trackLink": "link",
       "album": Album.fromMap({"name": "Album name"}),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../blocs/track_provider.dart';
 import '../models/track.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../Helpers/string.dart';
 
 class LastPublishedTrackLink extends StatelessWidget {
   final int trackId;
@@ -27,34 +28,54 @@ class LastPublishedTrackLink extends StatelessWidget {
               return Container();
             }
             return Container(
-              margin: EdgeInsets.symmetric(horizontal: 0.5),
-              child: Stack(
-                alignment: Alignment.bottomLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  DecoratedBox(
-                    position: DecorationPosition.foreground,
-                    decoration: new BoxDecoration(
-                      gradient: new LinearGradient(
-                        begin: Alignment(0.0, 1.2),
-                        end: Alignment(0.0, -0.5),
-                        colors: <Color>[Colors.black, Colors.transparent],
-                      ),
-                    ),
-                    child: CachedNetworkImage(
-                      height: 120,
-                      width: 120,
-                      fit: BoxFit.cover,
-                      imageUrl: trackSnapshot.data.picture,
+                  CachedNetworkImage(
+                    height: 150,
+                    width: double.maxFinite,
+                    fit: BoxFit.cover,
+                    imageUrl: trackSnapshot.data.picture,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Text(
+                      cropText(capitalize(trackSnapshot.data.name), 14),
+                      style: TextStyle(fontSize: 24),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(5.0),
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
                     child: Text(
-                      trackSnapshot.data.name,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                      cropText(capitalize(trackSnapshot.data.artistName), 25),
+                      style: TextStyle(color: Colors.grey, fontSize: 14),
                     ),
-                  )
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 10, right: 50, left: 50),
+                    child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.play_circle_outline,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Play",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ]),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {},
+                    ),
+                  ),
                 ],
               ),
             );
