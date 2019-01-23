@@ -55,7 +55,7 @@ class _ArtistState extends State<ArtistDetail> {
                 controller: _scrollController,
                 slivers: [
                   _buildSliverAppBar(artistBloc),
-                  _buildTracksList(snapshot.data)
+                  _buildTracksList(snapshot.data),
                 ],
               );
             }

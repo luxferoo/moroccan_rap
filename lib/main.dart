@@ -4,6 +4,7 @@ import 'blocs/artist_provider.dart';
 import 'blocs/track_provider.dart';
 import 'screens/my_navigator.dart';
 import 'screens/artist_detail.dart';
+import 'screens/music_player.dart';
 
 void main() => runApp(App());
 
@@ -15,7 +16,8 @@ class App extends StatelessWidget {
         child: MaterialApp(
           theme: ThemeData(
             fontFamily: "Montserrat Regular",
-            primarySwatch: Colors.red,
+            primaryColor: Colors.red,
+            accentColor: Colors.red.withOpacity(0.65)
           ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: routes,
@@ -30,6 +32,8 @@ MaterialPageRoute routes(RouteSettings setting) {
     builder: (BuildContext context) {
       final ArtistBloc artistBloc = ArtistProvider.of(context);
       final TrackBloc trackBloc = TrackProvider.of(context);
+
+      return MusicPlayer();
 
       if (setting.name == "/") {
         trackBloc.fetchLastTracksIds();

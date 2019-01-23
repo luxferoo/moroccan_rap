@@ -65,8 +65,8 @@ class ArtistCard extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
       title: Text(
-        cropText(capitalize(artist.name), 10),
-        style: TextStyle(color: Colors.white, fontSize: 15.0),
+        cropText(capitalize(artist.name), 8),
+        style: TextStyle(color: Colors.white, fontSize: 15.0,letterSpacing: 3.0),
       ),
       subtitle: Text(
         artist.type,
