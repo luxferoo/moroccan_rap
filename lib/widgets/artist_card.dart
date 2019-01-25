@@ -70,7 +70,7 @@ class ArtistCard extends StatelessWidget {
       ),
       subtitle: Text(
         artist.type,
-        style: TextStyle(color: Colors.red, fontSize: 13.0),
+        style: TextStyle(color: Colors.white70, fontSize: 13.0),
       ),
     );
   }

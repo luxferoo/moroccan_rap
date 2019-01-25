@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
-import '../widgets/circle_clipper.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
+import '../widgets/audio_radial_seek_bar.dart';
 import '../widgets/bottom_controller.dart';
-import '../widgets/radial_seek_bar.dart';
 
 class MusicPlayer extends StatefulWidget {
   @override
@@ -12,61 +11,50 @@ class MusicPlayer extends StatefulWidget {
 class _MusicPlayerState extends State<MusicPlayer> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        leading: IconButton(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          icon: Icon(Icons.arrow_back_ios),
-          color: Colors.grey[300],
-          onPressed: () {},
-        ),
-        actions: <Widget>[
-          IconButton(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            icon: Icon(Icons.menu),
-            color: Colors.grey[300],
-            onPressed: () {},
-          ),
-        ],
-        title: Text(""),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Container(
-                width: 125.0,
-                height: 125.0,
-                child: RadialSeekBar(
-                  progressPercent: 0.5,
-                  thumbPosition: 0.5,
-                  thumbColor: Theme.of(context).primaryColor,
-                  progressColor: Theme.of(context).accentColor,
-                  trackColor: Colors.grey[300],
-                  child: ClipOval(
-                    child: Image.network(
-                      "https://i.ytimg.com/vi/odpypeUvxHw/hqdefault.jpg",
-                      fit: BoxFit.cover,
-                    ),
-                    clipper: CircleClipper(),
-                  ),
+    return AudioComponent(playerBuilder:
+        (BuildContext context, AudioPlayer player, Widget child) {
+      return WillPopScope(
+          onWillPop: () async {
+            player.dispose();
+            player.pause();
+            return true;
+          },
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white,
+                    Colors.white,
+                    Theme.of(context).primaryColor,
+                  ],
                 ),
               ),
+              child: Column(
+                children: <Widget>[
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0.0,
+                    leading: IconButton(
+                        color: Theme.of(context).primaryColor,
+                        icon: Icon(Icons.arrow_back_ios),
+                        onPressed: () {
+                          player.dispose();
+                          player.pause();
+                          Navigator.of(context).pop();
+                        }),
+                  ),
+                  Expanded(
+                    child: AudioRadialSeekBar(),
+                  ),
+                  BottomControls()
+                ],
+              ),
             ),
-          ),
-          Container(
-            width: double.infinity,
-            height: 125.0,
-          ),
-          BottomControls()
-        ],
-      ),
-    );
+          ));
+    });
   }
 }
-

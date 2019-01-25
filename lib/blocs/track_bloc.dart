@@ -5,6 +5,9 @@ import '../repositories/track.dart' as TrackRepo;
 class TrackBloc {
   final _repository = TrackRepo.Track();
   final _trackFetcher = PublishSubject<int>();
+  final _tracksByArtistFetcher = PublishSubject<int>();
+  final _tracksByArtistOutput =
+      ReplaySubject<Future<List<TrackModel.Track>>>();
   final _lastTracksIds = PublishSubject<List<int>>();
   final _trackOutput = BehaviorSubject<Map<int, Future<TrackModel.Track>>>();
 
@@ -13,11 +16,25 @@ class TrackBloc {
   Observable<Map<int, Future<TrackModel.Track>>> get track =>
       _trackOutput.stream;
 
+  Observable<Future<List<TrackModel.Track>>> get tracksByArtists =>
+      _tracksByArtistOutput.stream;
+
   Function(int) get fetchTrack => _trackFetcher.sink.add;
 
+  Function(int) get fetchTracksByArtist => _tracksByArtistFetcher.sink.add;
 
   TrackBloc() {
+    _tracksByArtistFetcher.stream
+        .transform(_tracksByArtistTransformer())
+        .pipe(_tracksByArtistOutput);
     _trackFetcher.stream.transform(_trackTransformer()).pipe(_trackOutput);
+  }
+
+  _tracksByArtistTransformer() {
+    return ScanStreamTransformer(
+        (Future<List<TrackModel.Track>> result, int id, _) {
+      return _repository.fetchTracksByArtistId(id);
+    });
   }
 
   _trackTransformer() {
@@ -34,6 +51,8 @@ class TrackBloc {
   }
 
   dispose() {
+    _tracksByArtistFetcher.close();
+    _tracksByArtistOutput.close();
     _lastTracksIds.close();
     _trackFetcher.close();
     _trackOutput.close();

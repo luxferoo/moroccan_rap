@@ -74,7 +74,9 @@ class LastPublishedTrackLink extends StatelessWidget {
                             )
                           ]),
                       color: Theme.of(context).primaryColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("player");
+                      },
                     ),
                   ),
                 ],

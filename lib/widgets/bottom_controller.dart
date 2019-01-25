@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
 import 'circle_clipper.dart';
 
-class BottomControls extends StatelessWidget {
+class BottomControls extends StatefulWidget {
   const BottomControls({
     Key key,
   }) : super(key: key);
 
   @override
+  BottomControlsState createState() => BottomControlsState();
+}
+
+class BottomControlsState extends State<BottomControls> {
+  @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).accentColor,
+      color: Colors.transparent,
       padding: EdgeInsets.symmetric(vertical: 50.0),
       child: Column(
         children: <Widget>[
@@ -41,37 +47,79 @@ class BottomControls extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                IconButton(
-                  iconSize: 35.0,
-                  color: Colors.white,
-                  onPressed: () {},
-                  icon: Icon(Icons.skip_previous),
+                AudioPlaylistComponent(
+                  playlistBuilder:
+                      (BuildContext context, Playlist playlist, Widget child) {
+                    return IconButton(
+                      iconSize: 35.0,
+                      color: Colors.white,
+                      onPressed: playlist.previous,
+                      icon: Icon(Icons.skip_previous),
+                    );
+                  },
                 ),
-                ClipOval(
-                  clipper: CircleClipper(),
-                  child: FlatButton(
-                    padding: EdgeInsets.all(15),
-                    child: Icon(
-                      Icons.pause,
-                      color: Theme.of(context).accentColor,
-                    ),
-                    color: Colors.white,
-                    splashColor: Theme.of(context).accentColor,
-                    highlightColor: Colors.white.withOpacity(0.75),
-                    onPressed: () {},
-                  ),
+                _buildPausePlayButton(),
+                AudioPlaylistComponent(
+                  playlistBuilder:
+                      (BuildContext context, Playlist playlist, Widget child) {
+                    return IconButton(
+                      iconSize: 35.0,
+                      color: Colors.white,
+                      onPressed: playlist.next,
+                      icon: Icon(Icons.skip_next),
+                    );
+                  },
                 ),
-                IconButton(
-                  iconSize: 35.0,
-                  color: Colors.white,
-                  onPressed: () {},
-                  icon: Icon(Icons.skip_next),
-                )
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  AudioComponent _buildPausePlayButton() {
+    return AudioComponent(
+      updateMe: [
+        WatchableAudioProperties.audioPlayerState,
+        WatchableAudioProperties.audioSeeking,
+        WatchableAudioProperties.audioBuffering,
+        WatchableAudioProperties.audioPlayhead,
+      ],
+      playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+        IconData icon = Icons.all_inclusive;
+        Color buttonColor = Colors.white.withOpacity(0.75);
+        Function onPressed;
+        if (player.state == AudioPlayerState.playing) {
+          icon = Icons.pause;
+          onPressed = () {
+            player.pause();
+          };
+          buttonColor = Colors.white;
+        } else if (player.state == AudioPlayerState.paused ||
+            player.state == AudioPlayerState.completed) {
+          icon = Icons.play_arrow;
+          onPressed = () {
+            player.play();
+          };
+          buttonColor = Colors.white;
+        }
+
+        return ClipOval(
+          clipper: CircleClipper(),
+          child: FlatButton(
+            padding: EdgeInsets.all(15),
+            child: Icon(
+              icon,
+              color: Theme.of(context).accentColor,
+            ),
+            color: buttonColor,
+            splashColor: Theme.of(context).accentColor,
+            highlightColor: Colors.white.withOpacity(0.75),
+            onPressed: onPressed,
+          ),
+        );
+      },
     );
   }
 }

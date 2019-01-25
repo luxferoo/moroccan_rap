@@ -1,114 +1,103 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'circle_clipper.dart';
+import 'radial_progress_bar.dart';
+import 'radial_drag_gesture_detector.dart';
 
 class RadialSeekBar extends StatefulWidget {
-  final double trackWidth;
-  final double progressWith;
-  final double thumbSize;
-  final double progressPercent;
-  final double thumbPosition;
-  final Color trackColor;
-  final Color progressColor;
-  final Color thumbColor;
-  final Widget child;
+  final double seekPercent;
+  final double progress;
+  final Function(double) onSeekRequested;
 
-  RadialSeekBar({
-    Key key,
-    this.trackWidth = 1.0,
-    this.progressWith = 3.0,
-    this.thumbSize = 8.0,
-    this.trackColor = Colors.grey,
-    this.progressColor = Colors.black,
-    this.thumbColor = Colors.black,
-    this.progressPercent = 0.0,
-    this.thumbPosition = 0.0,
-    this.child,
-  }) : super(key: key);
+  const RadialSeekBar(
+      {Key key,
+      this.seekPercent = 0.0,
+      this.progress = 0.0,
+      this.onSeekRequested})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _RadialSeekBarState();
 }
 
 class _RadialSeekBarState extends State<RadialSeekBar> {
+  double _currentDragPercent;
+  double _progress = 0.0;
+  PolarCoord _startDragCoord;
+  double _startDragPercent;
+
+  @override
+  void initState() {
+    super.initState();
+    _progress = widget.progress;
+  }
+
+  @override
+  void didUpdateWidget(RadialSeekBar old) {
+    super.didUpdateWidget(old);
+    _progress = widget.progress;
+  }
+
+  _onDragStart(PolarCoord coord) {
+    _startDragCoord = coord;
+    _startDragPercent = _progress;
+  }
+
+  _onDragUpdate(PolarCoord coord) {
+    final dragAngle = coord.angle - _startDragCoord.angle;
+    final dragPercent = dragAngle / (2 * pi);
+    setState(
+        () => _currentDragPercent = (_startDragPercent + dragPercent) % 1.0);
+  }
+
+  _onDragEnd() {
+    if (widget.onSeekRequested != null) {
+      widget.onSeekRequested(_currentDragPercent);
+    }
+    setState(() {
+      _startDragCoord = null;
+      _currentDragPercent = null;
+      _startDragPercent = 0.0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      foregroundPainter: _RadialSeekBarPainter(
-        trackWidth: widget.trackWidth,
-        progressWith: widget.progressWith,
-        thumbSize: widget.thumbSize,
-        trackColor: widget.trackColor,
-        progressColor: widget.progressColor,
-        thumbColor: widget.thumbColor,
-        progressPercent: widget.progressPercent,
-        thumbPosition: widget.thumbPosition,
-      ),
-      child: Padding(
-        child: widget.child,
-        padding: EdgeInsets.all(10.0),
+    double thumbPosition = _progress;
+    if (_currentDragPercent != null) {
+      thumbPosition = _currentDragPercent;
+    } else if (widget.seekPercent != null) {
+      thumbPosition = widget.seekPercent;
+    }
+
+    return RadialDragGestureDetector(
+      onRadialDragStart: _onDragStart,
+      onRadialDragUpdate: _onDragUpdate,
+      onRadialDragEnd: _onDragEnd,
+      child: Container(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            width: 250.0,
+            height: 250.0,
+            child: RadialProgressBar(
+              progressPercent: _progress,
+              thumbPosition: thumbPosition,
+              thumbColor: Theme.of(context).accentColor,
+              progressColor: Theme.of(context).accentColor,
+              trackColor: Colors.grey[300],
+              child: ClipOval(
+                child: Image.network(
+                  "https://i.ytimg.com/vi/odpypeUvxHw/hqdefault.jpg",
+                  fit: BoxFit.cover,
+                ),
+                clipper: CircleClipper(),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
-}
-
-class _RadialSeekBarPainter extends CustomPainter {
-  final double trackWidth;
-  final double progressWith;
-  final double thumbSize;
-  final double progressPercent;
-  final double thumbPosition;
-  final Color trackColor;
-  final Color progressColor;
-  final Color thumbColor;
-  final Paint trackPaint;
-  final Paint thumbPaint;
-  final Paint progressPaint;
-
-  _RadialSeekBarPainter({
-    @required this.trackWidth,
-    @required this.progressWith,
-    @required this.thumbSize,
-    @required this.progressPercent,
-    @required this.thumbPosition,
-    @required this.trackColor,
-    @required this.progressColor,
-    @required this.thumbColor,
-  })  : trackPaint = Paint()
-          ..color = trackColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = trackWidth,
-        progressPaint = Paint()
-          ..color = progressColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = progressWith
-          ..strokeCap = StrokeCap.round,
-        thumbPaint = Paint()
-          ..color = thumbColor
-          ..style = PaintingStyle.fill
-          ..strokeWidth = trackWidth;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = min(size.width, size.height) / 2;
-
-    canvas.drawCircle(center, radius, trackPaint);
-
-    final progressAngle = 2 * pi * progressPercent;
-
-    canvas.drawArc(Rect.fromCircle(center: center, radius: radius), -pi / 2,
-        progressAngle, false, progressPaint);
-
-    //TODO learn about cos/sin...
-    final thumbAngle = 2 * pi * thumbPosition - (pi / 2);
-    final thumbX = cos(thumbAngle) * radius;
-    final thumbY = sin(thumbAngle) * radius;
-    final thumbRadius = thumbSize / 2;
-    final thumbCenter = Offset(thumbX, thumbY) + center;
-
-    canvas.drawCircle(thumbCenter, thumbRadius, thumbPaint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
