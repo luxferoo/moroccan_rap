@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../blocs/artist_provider.dart';
 import '../blocs/track_provider.dart';
 import '../widgets/artist_card.dart';
 import '../widgets/last_published_track_link.dart';
 
 class Home extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     final ArtistBloc artistBloc = ArtistProvider.of(context);
     final TrackBloc trackBloc = TrackProvider.of(context);
 
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.black));
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -20,8 +18,7 @@ class Home extends StatelessWidget {
           "Moroccan Rap",
           style: TextStyle(
             color: Colors.black,
-            fontFamily: "Rock Salt",
-            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Colors.white,
@@ -35,7 +32,7 @@ class Home extends StatelessWidget {
                 children: <Widget>[
                   _buildSectionTitle("Recent tracks"),
                   Container(
-                    height: 270,
+                    height: 220,
                     child: _buildLastPublishedTracks(trackBloc),
                   ),
                   _buildSectionTitle("Artists"),
@@ -73,7 +70,7 @@ class Home extends StatelessWidget {
                 child: Container(
                     child:
                         LastPublishedTrackLink(trackId: snapshot.data[index]),
-                    width: 200));
+                    width: 170));
           },
         );
       },
@@ -114,11 +111,11 @@ class Home extends StatelessWidget {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 13, horizontal: 2),
+      padding: EdgeInsets.symmetric(vertical: 13, horizontal: 12),
       child: Text(
         title,
         style: TextStyle(
-            color: Colors.black, fontSize: 23, fontWeight: FontWeight.bold),
+            color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
         textAlign: TextAlign.left,
       ),
     );

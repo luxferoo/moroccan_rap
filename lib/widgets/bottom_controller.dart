@@ -15,7 +15,17 @@ class BottomControlsState extends State<BottomControls> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Colors.transparent,
+          Colors.black26,
+          Colors.black,
+          Colors.black,
+        ],
+      )),
       padding: EdgeInsets.symmetric(vertical: 50.0),
       child: Column(
         children: <Widget>[

@@ -79,8 +79,8 @@ class _RadialSeekBarState extends State<RadialSeekBar> {
         color: Colors.transparent,
         child: Center(
           child: Container(
-            width: 250.0,
-            height: 250.0,
+            width: 200.0,
+            height: 200.0,
             child: RadialProgressBar(
               progressPercent: _progress,
               thumbPosition: thumbPosition,

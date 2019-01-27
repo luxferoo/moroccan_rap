@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
 import 'songs.dart';
 import 'screens/home.dart';
@@ -12,6 +13,10 @@ void main() => runApp(App());
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.black));
+
     return AudioPlaylist(
       playlist: demoPlaylist.songs.map((DemoSong song) {
         return song.audioUrl;

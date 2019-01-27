@@ -32,7 +32,7 @@ class LastPublishedTrackLink extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   CachedNetworkImage(
-                    height: 150,
+                    height: 120,
                     width: double.maxFinite,
                     fit: BoxFit.cover,
                     imageUrl: trackSnapshot.data.picture,
@@ -41,7 +41,7 @@ class LastPublishedTrackLink extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 5.0),
                     child: Text(
                       cropText(capitalize(trackSnapshot.data.name), 10),
-                      style: TextStyle(fontSize: 20, letterSpacing: 3.0),
+                      style: TextStyle(fontSize: 15, letterSpacing: 3.0),
                     ),
                   ),
                   Padding(
@@ -49,11 +49,11 @@ class LastPublishedTrackLink extends StatelessWidget {
                     child: Text(
                       cropText(capitalize(trackSnapshot.data.artistName), 12),
                       style: TextStyle(
-                          color: Colors.grey, fontSize: 14, letterSpacing: 1.0),
+                          color: Colors.grey, fontSize: 13, letterSpacing: 1.0),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 10, right: 50, left: 50),
+                    margin: EdgeInsets.only(top: 10, right: 30, left: 30),
                     child: FlatButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0)),
@@ -63,7 +63,7 @@ class LastPublishedTrackLink extends StatelessWidget {
                             Icon(
                               Icons.play_circle_outline,
                               color: Colors.white,
-                              size: 18,
+                              size: 15,
                             ),
                             SizedBox(
                               width: 5,
