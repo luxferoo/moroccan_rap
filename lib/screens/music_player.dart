@@ -15,7 +15,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
     return AudioComponent(playerBuilder:
         (BuildContext context, AudioPlayer player, Widget child) {
       return WillPopScope(
-          onWillPop: () {
+          onWillPop: () async {
             player.dispose();
             player.pause();
             return true;
