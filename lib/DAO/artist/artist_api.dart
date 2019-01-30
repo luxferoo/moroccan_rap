@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 class ArtistApi {
   Future<List<int>> fetchIds() async {
-    return [1, 2, 3, 4, 5, 56, 7, 8, 9, 10];
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   }
 
   Future<Artist> fetchItem(int id) async {

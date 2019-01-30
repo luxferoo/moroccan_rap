@@ -17,7 +17,12 @@ class Track {
     return trackApi.fetchItem(id);
   }
 
+  Future<List<TrackModel.Track>> fetchLastTracks() {
+    return trackApi.fetchTracksByArtistId(1);
+  }
+
   clearCache() async {
     return true;
   }
+
 }

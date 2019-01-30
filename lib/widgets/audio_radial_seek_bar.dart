@@ -3,6 +3,10 @@ import 'package:fluttery_audio/fluttery_audio.dart';
 import 'radial_seek_bar.dart';
 
 class AudioRadialSeekBar extends StatefulWidget {
+  final String picture;
+
+  const AudioRadialSeekBar({@required this.picture});
+
   @override
   State<StatefulWidget> createState() => _AudioRadialSeekBarState();
 }
@@ -27,6 +31,7 @@ class _AudioRadialSeekBarState extends State<AudioRadialSeekBar> {
 
         _seekPercent = player.isSeeking ? _seekPercent : null;
         return RadialSeekBar(
+          picture: widget.picture,
           progress: playBackProgress,
           seekPercent: _seekPercent,
           onSeekRequested: (double seekPercent) {

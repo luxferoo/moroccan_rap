@@ -4,8 +4,9 @@ import '../models/track.dart';
 
 class TrackTile extends StatelessWidget {
   final Track track;
+  final VoidCallback onTap;
 
-  TrackTile({@required this.track});
+  TrackTile({@required this.track, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +20,12 @@ class TrackTile extends StatelessWidget {
           imageUrl: track.picture,
         ),
         title: Text(track.name ?? "undefined"),
-        subtitle: Text(track.album?.name ?? "undefined"),
+        subtitle: Text(track.album ?? "undefined"),
         trailing: Text(
-          "3:25",
+          track.duration,
           style: TextStyle(color: Colors.grey),
         ),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }

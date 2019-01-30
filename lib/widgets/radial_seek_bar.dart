@@ -10,8 +10,11 @@ class RadialSeekBar extends StatefulWidget {
   final double progress;
   final Function(double) onSeekRequested;
 
+  final String picture;
+
   const RadialSeekBar(
       {Key key,
+      @required this.picture,
       this.seekPercent = 0.0,
       this.progress = 0.0,
       this.onSeekRequested})
@@ -89,7 +92,7 @@ class _RadialSeekBarState extends State<RadialSeekBar> {
               trackColor: Colors.grey[300],
               child: ClipOval(
                 child: Image.network(
-                  "https://i.ytimg.com/vi/odpypeUvxHw/hqdefault.jpg",
+                  widget.picture,
                   fit: BoxFit.cover,
                 ),
                 clipper: CircleClipper(),

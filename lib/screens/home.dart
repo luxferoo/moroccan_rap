@@ -5,7 +5,6 @@ import '../widgets/artist_card.dart';
 import '../widgets/last_published_track_link.dart';
 
 class Home extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final ArtistBloc artistBloc = ArtistProvider.of(context);
@@ -68,8 +67,13 @@ class Home extends StatelessWidget {
             bloc.fetchTrack(snapshot.data[index]);
             return Card(
                 child: Container(
-                    child:
-                        LastPublishedTrackLink(trackId: snapshot.data[index]),
+                    child: LastPublishedTrackLink(
+                      trackId: snapshot.data[index],
+                      onPressed: () {
+                        bloc.fetchLastTracks();
+                        Navigator.of(context).pushNamed("/player/$index");
+                      },
+                    ),
                     width: 170));
           },
         );

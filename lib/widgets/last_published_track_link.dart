@@ -6,8 +6,9 @@ import '../Helpers/string.dart';
 
 class LastPublishedTrackLink extends StatelessWidget {
   final int trackId;
+  final VoidCallback onPressed;
 
-  LastPublishedTrackLink({this.trackId});
+  LastPublishedTrackLink({this.trackId, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +75,7 @@ class LastPublishedTrackLink extends StatelessWidget {
                             )
                           ]),
                       color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        Navigator.of(context).pushNamed("player");
-                      },
+                      onPressed: onPressed,
                     ),
                   ),
                 ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../blocs/track_provider.dart';
-import '../models/album.dart';
 import '../models/artist.dart';
 import '../widgets/track_tile.dart';
 import '../models/track.dart';
@@ -37,6 +36,7 @@ class _ArtistState extends State<ArtistDetail> {
   @override
   Widget build(BuildContext context) {
     final artistBloc = ArtistProvider.of(context);
+    final trackBloc = TrackProvider.of(context);
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -55,7 +55,7 @@ class _ArtistState extends State<ArtistDetail> {
                 controller: _scrollController,
                 slivers: [
                   _buildSliverAppBar(artistBloc),
-                  _buildTracksList(snapshot.data),
+                  _buildTracksList(snapshot.data, trackBloc),
                 ],
               );
             }
@@ -171,13 +171,18 @@ class _ArtistState extends State<ArtistDetail> {
     );
   }
 
-  _buildTracksList(List<Track> tracks) {
+  _buildTracksList(List<Track> tracks, TrackBloc bloc) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, index) {
           return Column(
             children: <Widget>[
-              TrackTile(track: tracks[index]),
+              TrackTile(
+                  track: tracks[index],
+                  onTap: () {
+                    bloc.fetchArtistPlaylist(widget.artistId);
+                    Navigator.of(context).pushNamed('/player/$index');
+                  }),
               Divider(
                 height: 0.0,
               )

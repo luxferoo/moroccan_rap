@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttery_audio/fluttery_audio.dart';
-import 'songs.dart';
 import 'screens/home.dart';
 import 'blocs/artist_provider.dart';
 import 'blocs/track_provider.dart';
@@ -17,20 +15,15 @@ class App extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.black));
 
-    return AudioPlaylist(
-      playlist: demoPlaylist.songs.map((DemoSong song) {
-        return song.audioUrl;
-      }).toList(),
-      child: TrackProvider(
-        child: ArtistProvider(
-          child: MaterialApp(
-            theme: ThemeData(
-                fontFamily: "Montserrat Regular",
-                primaryColor: Colors.deepPurple,
-                accentColor: Colors.deepPurpleAccent),
-            debugShowCheckedModeBanner: false,
-            onGenerateRoute: routes,
-          ),
+    return TrackProvider(
+      child: ArtistProvider(
+        child: MaterialApp(
+          theme: ThemeData(
+              fontFamily: "Montserrat Regular",
+              primaryColor: Colors.deepPurple,
+              accentColor: Colors.deepPurpleAccent),
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: routes,
         ),
       ),
     );
@@ -58,9 +51,13 @@ MaterialPageRoute routes(RouteSettings setting) {
           artistId: artistId,
         );
       }
-
-      if (setting.name == "player") {
-        return MusicPlayer();
+      final playerRegex = RegExp(r"/player/[0-9]*$");
+      if (playerRegex.hasMatch(setting.name)) {
+        final index =
+            int.parse(setting.name.replaceFirst('/player/', ''));
+        return MusicPlayer(
+          startAt : index
+        );
       }
     },
   );

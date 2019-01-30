@@ -3,9 +3,13 @@ import 'package:fluttery_audio/fluttery_audio.dart';
 import 'circle_clipper.dart';
 
 class BottomControls extends StatefulWidget {
-  const BottomControls({
-    Key key,
-  }) : super(key: key);
+  final String songTitle;
+  final String artistName;
+
+  BottomControls({
+    this.songTitle,
+    this.artistName,
+  });
 
   @override
   BottomControlsState createState() => BottomControlsState();
@@ -30,11 +34,12 @@ class BottomControlsState extends State<BottomControls> {
       child: Column(
         children: <Widget>[
           RichText(
+            textAlign: TextAlign.center,
             text: TextSpan(
               text: '',
               children: [
                 TextSpan(
-                    text: 'Song Title\n',
+                    text: widget.songTitle + "\n",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.0,
@@ -42,7 +47,7 @@ class BottomControlsState extends State<BottomControls> {
                         letterSpacing: 4.0,
                         height: 1.5)),
                 TextSpan(
-                    text: 'Artist Name',
+                    text: widget.artistName,
                     style: TextStyle(
                         color: Colors.white.withOpacity(0.75),
                         fontSize: 12.0,
@@ -89,6 +94,24 @@ class BottomControlsState extends State<BottomControls> {
   }
 
   AudioComponent _buildPausePlayButton() {
+    ClipOval _buildCircularControlButton(
+        {VoidCallback onPressed, IconData icon}) {
+      return ClipOval(
+        clipper: CircleClipper(),
+        child: FlatButton(
+          padding: EdgeInsets.all(15),
+          child: Icon(
+            icon,
+            color: Theme.of(context).accentColor,
+          ),
+          color: Colors.white,
+          splashColor: Theme.of(context).accentColor,
+          highlightColor: Colors.white.withOpacity(0.75),
+          onPressed: onPressed,
+        ),
+      );
+    }
+
     return AudioComponent(
       updateMe: [
         WatchableAudioProperties.audioPlayerState,
@@ -97,38 +120,21 @@ class BottomControlsState extends State<BottomControls> {
         WatchableAudioProperties.audioPlayhead,
       ],
       playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
-        IconData icon = Icons.all_inclusive;
-        Color buttonColor = Colors.white.withOpacity(0.75);
-        Function onPressed;
         if (player.state == AudioPlayerState.playing) {
-          icon = Icons.pause;
-          onPressed = () {
-            player.pause();
-          };
-          buttonColor = Colors.white;
+          return _buildCircularControlButton(
+              icon: Icons.pause, onPressed: player.pause);
         } else if (player.state == AudioPlayerState.paused ||
             player.state == AudioPlayerState.completed) {
-          icon = Icons.play_arrow;
-          onPressed = () {
-            player.play();
-          };
-          buttonColor = Colors.white;
+          return _buildCircularControlButton(
+              icon: Icons.play_arrow, onPressed: player.play);
+        } else {
+          return Padding(
+              padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 1.0),
+              child: Text(
+                "Buffering...",
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ));
         }
-
-        return ClipOval(
-          clipper: CircleClipper(),
-          child: FlatButton(
-            padding: EdgeInsets.all(15),
-            child: Icon(
-              icon,
-              color: Theme.of(context).accentColor,
-            ),
-            color: buttonColor,
-            splashColor: Theme.of(context).accentColor,
-            highlightColor: Colors.white.withOpacity(0.75),
-            onPressed: onPressed,
-          ),
-        );
       },
     );
   }
