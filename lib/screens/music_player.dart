@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
+import '../Helpers/string.dart';
 import '../models/track.dart';
 import '../blocs/track_provider.dart';
 import '../widgets/audio_radial_seek_bar.dart';
@@ -35,7 +36,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
   }
 
   AudioPlaylist _buildAudioPlaylist(List<Track> trackList) {
-    AppBar _buildAppBar(AudioPlayer player){
+    AppBar _buildAppBar(AudioPlayer player) {
       return AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -64,10 +65,15 @@ class _MusicPlayerState extends State<MusicPlayer> {
         return track.link;
       }).toList(),
       child: AudioComponent(
+        updateMe: [
+          WatchableAudioProperties.audioPlayerState,
+          WatchableAudioProperties.audioBuffering,
+          WatchableAudioProperties.audioPlayhead
+        ],
         playerBuilder:
             (BuildContext context, AudioPlayer player, Widget child) {
           return WillPopScope(
-            onWillPop: ()=>_willPop(player),
+            onWillPop: () => _willPop(player),
             child: Scaffold(
               backgroundColor: Colors.black,
               body: AudioPlaylistComponent(
@@ -80,17 +86,32 @@ class _MusicPlayerState extends State<MusicPlayer> {
                               Colors.black87, BlendMode.darken),
                           fit: BoxFit.cover,
                           image: CachedNetworkImageProvider(
-                              trackList[playlist.activeIndex].artistPicture)),
+                              trackList[playlist.activeIndex].artistPicture??"")),
                     ),
                     child: Column(
                       children: <Widget>[
                         _buildAppBar(player),
                         Expanded(
-                          child: AudioRadialSeekBar(
-                            picture: trackList[playlist.activeIndex].picture,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Text(
+                                formatDuration(player.position),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              AudioRadialSeekBar(
+                                picture:
+                                    trackList[playlist.activeIndex].picture??"",
+                              ),
+                              Text(
+                                formatDuration(player.audioLength),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
                           ),
                         ),
                         BottomControls(
+                          audioPlayer: player,
                           songTitle: trackList[playlist.activeIndex].name,
                           artistName:
                               trackList[playlist.activeIndex].artistName,

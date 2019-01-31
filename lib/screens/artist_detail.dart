@@ -113,7 +113,7 @@ class _ArtistState extends State<ArtistDetail> {
                       errorWidget: Image(
                         image: AssetImage("assets/img/picture-placeholder.png"),
                       ),
-                      imageUrl: artistSnapshot.data.picture,
+                      imageUrl: artistSnapshot.data.picture??"",
                       fit: BoxFit.cover,
                       height: double.infinity,
                       width: double.infinity,
@@ -158,7 +158,7 @@ class _ArtistState extends State<ArtistDetail> {
                 return SizedBox();
               }
               return Text(
-                artistSnapshot.data.name,
+                artistSnapshot.data.name??"",
                 style: TextStyle(color: silverAppBarTextColor, fontSize: 20.0),
               );
             },

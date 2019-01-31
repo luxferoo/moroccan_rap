@@ -36,19 +36,19 @@ class LastPublishedTrackLink extends StatelessWidget {
                     height: 120,
                     width: double.maxFinite,
                     fit: BoxFit.cover,
-                    imageUrl: trackSnapshot.data.picture,
+                    imageUrl: trackSnapshot.data.picture??"",
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.0),
                     child: Text(
-                      cropText(capitalize(trackSnapshot.data.name), 10),
+                      cropText(capitalize(trackSnapshot.data.name??""), 10),
                       style: TextStyle(fontSize: 15, letterSpacing: 3.0),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.0),
                     child: Text(
-                      cropText(capitalize(trackSnapshot.data.artistName), 12),
+                      cropText(capitalize(trackSnapshot.data.artistName??""), 12),
                       style: TextStyle(
                           color: Colors.grey, fontSize: 13, letterSpacing: 1.0),
                     ),

@@ -1,14 +1,16 @@
+import 'package:meta/meta.dart';
+
 class Track {
-  final int id;
-  final int trackId;
-  final int artistId;
-  final String album;
-  final String name;
-  final String artistName;
-  final String picture;
-  final String artistPicture;
-  final String link ;
-  final String duration ;
+  @required final int id;
+  @required final int trackId;
+  @required final int artistId;
+  @required final String album;
+  @required final String name;
+  @required final String artistName;
+  @required final String picture;
+  @required final String artistPicture;
+  @required final String link ;
+  @required final String duration ;
 
   Track.fromMap(Map<String, dynamic> parsedJson)
       : id = parsedJson["id"],

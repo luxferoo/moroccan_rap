@@ -65,11 +65,11 @@ class ArtistCard extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
       title: Text(
-        cropText(capitalize(artist.name), 8),
+        cropText(capitalize(artist.name??""), 8),
         style: TextStyle(color: Colors.white, fontSize: 15.0,letterSpacing: 3.0),
       ),
       subtitle: Text(
-        artist.type,
+        artist.type??"",
         style: TextStyle(color: Colors.white70, fontSize: 13.0),
       ),
     );

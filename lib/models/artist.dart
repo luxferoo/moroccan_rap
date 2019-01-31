@@ -1,14 +1,14 @@
+import 'package:meta/meta.dart';
+
 class Artist {
-  final int id;
-  final String picture;
-  final String name;
-  final String type;
-  final bool liked;
+  @required final int id;
+  @required final String picture;
+  @required final String name;
+  @required final String type;
 
   Artist.fromMap(Map<String, dynamic> parsedJson)
       : id = parsedJson["id"],
         picture = parsedJson["picture"],
         name = parsedJson["name"],
-        type = parsedJson["type"],
-        liked = parsedJson["liked"];
+        type = parsedJson["type"];
 }

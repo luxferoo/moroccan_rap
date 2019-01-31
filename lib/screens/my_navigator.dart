@@ -40,7 +40,7 @@ class _MyNavigatorState extends State<MyNavigator> {
     return BottomNavigationBarItem(
       activeIcon: Icon(
         icon,
-       // color: Colors.black,
+        // color: Colors.black,
         size: 28.0,
       ),
       icon: Icon(

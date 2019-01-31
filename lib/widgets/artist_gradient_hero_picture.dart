@@ -22,7 +22,7 @@ class ArtistGradientHeroPicture extends StatelessWidget {
           ),
         ),
         child: CachedNetworkImage(
-          imageUrl: artist.picture,
+          imageUrl: artist.picture??"",
           fit: BoxFit.cover,
           errorWidget: Image(image: AssetImage("assets/img/picture-placeholder.png")),
         ),

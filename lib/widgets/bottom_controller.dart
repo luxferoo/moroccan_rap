@@ -5,10 +5,12 @@ import 'circle_clipper.dart';
 class BottomControls extends StatefulWidget {
   final String songTitle;
   final String artistName;
+  final AudioPlayer audioPlayer;
 
   BottomControls({
-    this.songTitle,
-    this.artistName,
+    @required this.songTitle,
+    @required this.artistName,
+    @required this.audioPlayer
   });
 
   @override
@@ -39,7 +41,7 @@ class BottomControlsState extends State<BottomControls> {
               text: '',
               children: [
                 TextSpan(
-                    text: widget.songTitle + "\n",
+                    text: "${widget.songTitle??""}\n",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.0,
@@ -73,7 +75,7 @@ class BottomControlsState extends State<BottomControls> {
                     );
                   },
                 ),
-                _buildPausePlayButton(),
+                _buildPausePlayButton(widget.audioPlayer),
                 AudioPlaylistComponent(
                   playlistBuilder:
                       (BuildContext context, Playlist playlist, Widget child) {
@@ -93,7 +95,7 @@ class BottomControlsState extends State<BottomControls> {
     );
   }
 
-  AudioComponent _buildPausePlayButton() {
+  Widget _buildPausePlayButton(AudioPlayer player) {
     ClipOval _buildCircularControlButton(
         {VoidCallback onPressed, IconData icon}) {
       return ClipOval(
@@ -112,30 +114,20 @@ class BottomControlsState extends State<BottomControls> {
       );
     }
 
-    return AudioComponent(
-      updateMe: [
-        WatchableAudioProperties.audioPlayerState,
-        WatchableAudioProperties.audioSeeking,
-        WatchableAudioProperties.audioBuffering,
-        WatchableAudioProperties.audioPlayhead,
-      ],
-      playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
-        if (player.state == AudioPlayerState.playing) {
-          return _buildCircularControlButton(
-              icon: Icons.pause, onPressed: player.pause);
-        } else if (player.state == AudioPlayerState.paused ||
-            player.state == AudioPlayerState.completed) {
-          return _buildCircularControlButton(
-              icon: Icons.play_arrow, onPressed: player.play);
-        } else {
-          return Padding(
-              padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 1.0),
-              child: Text(
-                "Buffering...",
-                style: TextStyle(color: Colors.white, fontSize: 16.0),
-              ));
-        }
-      },
-    );
+    if (player.state == AudioPlayerState.playing) {
+      return _buildCircularControlButton(
+          icon: Icons.pause, onPressed: player.pause);
+    } else if (player.state == AudioPlayerState.paused ||
+        player.state == AudioPlayerState.completed) {
+      return _buildCircularControlButton(
+          icon: Icons.play_arrow, onPressed: player.play);
+    } else {
+      return Padding(
+          padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 1.0),
+          child: Text(
+            "Buffering...",
+            style: TextStyle(color: Colors.white, fontSize: 16.0),
+          ));
+    }
   }
 }

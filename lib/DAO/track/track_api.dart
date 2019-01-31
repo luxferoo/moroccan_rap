@@ -18,7 +18,7 @@ class TrackApi {
       "link":
           "https://api.soundcloud.com/tracks/434370309/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P",
       "album": "Album",
-      "duration": "3:22",
+      "duration": "03:22",
     }));
 
     result.add(Track.fromMap({
@@ -32,7 +32,7 @@ class TrackApi {
       "link":
       "https://api.soundcloud.com/tracks/402538329/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P",
       "album": "Album",
-      "duration": "3:22",
+      "duration": "03:11",
     }));
 
 
@@ -47,7 +47,7 @@ class TrackApi {
       "link":
       "https://api.soundcloud.com/tracks/266891990/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P",
       "album": "Album",
-      "duration": "3:22",
+      "duration": "03:22",
     }));
     return result;
   }
@@ -63,7 +63,7 @@ class TrackApi {
       "link":
           "https://api.soundcloud.com/tracks/434370309/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P",
       "album": "Album",
-      "duration": "3:22",
+      "duration": "03:22",
     });
   }
 }
