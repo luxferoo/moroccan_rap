@@ -3,6 +3,8 @@ import '../blocs/artist_provider.dart';
 import '../blocs/track_provider.dart';
 import '../widgets/artist_card.dart';
 import '../widgets/last_published_track_link.dart';
+import '../repositories/artist.dart' as ArtistRepos;
+import '../repositories/track.dart' as TrackRepos;
 
 class Home extends StatelessWidget {
   @override
@@ -12,7 +14,8 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar: AppBar(elevation: 0.0,
+        centerTitle: true,
         title: Text(
           "Moroccan Rap",
           style: TextStyle(
@@ -41,10 +44,11 @@ class Home extends StatelessWidget {
             _buildArtistList(artistBloc)
           ],
         ),
-        onRefresh: () {
-          return Future.delayed(Duration(seconds: 0), () {
-            artistBloc.fetchArtistsIds();
-          });
+        onRefresh: () async {
+          await ArtistRepos.Artist().clearCache();
+          await TrackRepos.Track().clearCache();
+          trackBloc.fetchLastTracksIds();
+          artistBloc.fetchArtistsIds();
         },
       ),
     );

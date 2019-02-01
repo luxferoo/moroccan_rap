@@ -16,9 +16,9 @@ String cropText(String s, int maxLength) {
 }
 
 String formatDuration(Duration duration) {
-  RegExp regex = RegExp(r".([0-9]*$)");
+  RegExp regex = RegExp(r"((^0:)|.[0-9]*$)");
   if (duration != null) {
     return duration.toString().replaceAll(regex, '');
   }
-  return "0:00:00";
+  return "00:00";
 }

@@ -42,7 +42,7 @@ class TrackBloc {
   _trackTransformer() {
     return ScanStreamTransformer(
         (Map<int, Future<TrackModel.Track>> cache, int id, int index) {
-      cache[id] = _repository.fetchItem(id);
+      cache[id] = _repository.fetchTrack(id);
       return cache;
     }, <int, Future<TrackModel.Track>>{});
   }

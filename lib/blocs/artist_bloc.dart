@@ -22,7 +22,7 @@ class ArtistBloc {
   _artistTransformer() {
     return ScanStreamTransformer(
         (Map<int, Future<ArtistModel.Artist>> cache, int id, int index) {
-      cache[id] = _repository.fetchItem(id);
+      cache[id] = _repository.fetchArtist(id);
       return cache;
     }, <int, Future<ArtistModel.Artist>>{});
   }

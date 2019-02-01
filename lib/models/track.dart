@@ -2,7 +2,6 @@ import 'package:meta/meta.dart';
 
 class Track {
   @required final int id;
-  @required final int trackId;
   @required final int artistId;
   @required final String album;
   @required final String name;
@@ -14,7 +13,6 @@ class Track {
 
   Track.fromMap(Map<String, dynamic> parsedJson)
       : id = parsedJson["id"],
-        trackId = parsedJson["trackId"],
         artistId = parsedJson["artistId"],
         album = parsedJson["album"],
         name = parsedJson["name"],

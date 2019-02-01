@@ -5,8 +5,12 @@ import 'blocs/artist_provider.dart';
 import 'blocs/track_provider.dart';
 import 'screens/artist_detail.dart';
 import 'screens/music_player.dart';
+import 'Helpers/db_provider.dart';
 
-void main() => runApp(App());
+void main() async {
+  await dbProvider.init();
+  runApp(App());
+}
 
 class App extends StatelessWidget {
   @override
@@ -53,11 +57,8 @@ MaterialPageRoute routes(RouteSettings setting) {
       }
       final playerRegex = RegExp(r"/player/[0-9]*$");
       if (playerRegex.hasMatch(setting.name)) {
-        final index =
-            int.parse(setting.name.replaceFirst('/player/', ''));
-        return MusicPlayer(
-          startAt : index
-        );
+        final index = int.parse(setting.name.replaceFirst('/player/', ''));
+        return MusicPlayer(startAt: index);
       }
     },
   );
