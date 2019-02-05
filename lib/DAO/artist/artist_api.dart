@@ -1,24 +1,24 @@
+import 'dart:convert';
 import 'artist_source.dart';
 import '../../models/artist.dart';
-import 'dart:math' as math;
+import 'package:http/http.dart' show Client;
+import '../../Helpers/globals.dart';
 
-class ArtistApi implements ArtistSource{
+class ArtistApi implements ArtistSource {
+  final globals = Globals();
+  final _client = Client();
+
   Future<List<int>> fetchIds() async {
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    final response = await _client.get('${globals.artistsRoot}/ids');
+    if (response.statusCode == 200)
+      return jsonDecode(response.body).cast<int>();
+    return null;
   }
 
   Future<Artist> fetchArtist(int id) async {
-    return await Future.delayed(
-      Duration(seconds: math.Random().nextInt(3)),
-      () => Artist.fromMap(
-            {
-              "id": id,
-              "picture":
-                  "http://qgprod.com/wp-content/uploads/2013/10/shayfeen-ep-.jpg",
-              "name": "Shayfeen",
-              "type": "Crew"
-            },
-          ),
-    );
+    final response = await _client.get('${globals.artistsRoot}/$id');
+    if (response.statusCode == 200)
+      return Artist.fromMap(jsonDecode(response.body));
+    return null;
   }
 }
