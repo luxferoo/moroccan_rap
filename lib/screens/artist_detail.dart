@@ -7,9 +7,11 @@ import '../widgets/sliver_app_bar_delegate.dart';
 import '../blocs/artist_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../repositories/track.dart' as TrackRepo;
+import '../Helpers/globals.dart';
 
 class ArtistDetail extends StatefulWidget {
   final int artistId;
+  final Globals globals = Globals();
 
   ArtistDetail({this.artistId});
 
@@ -113,7 +115,8 @@ class _ArtistState extends State<ArtistDetail> {
                       errorWidget: Image(
                         image: AssetImage("assets/img/picture-placeholder.png"),
                       ),
-                      imageUrl: artistSnapshot.data.picture??"",
+                      imageUrl: widget.globals.serverPath +
+                          (artistSnapshot.data.picture ?? ""),
                       fit: BoxFit.cover,
                       height: double.infinity,
                       width: double.infinity,
@@ -158,7 +161,7 @@ class _ArtistState extends State<ArtistDetail> {
                 return SizedBox();
               }
               return Text(
-                artistSnapshot.data.name??"",
+                artistSnapshot.data.name ?? "",
                 style: TextStyle(color: silverAppBarTextColor, fontSize: 20.0),
               );
             },

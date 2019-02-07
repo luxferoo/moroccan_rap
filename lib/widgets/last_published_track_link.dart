@@ -3,8 +3,10 @@ import '../blocs/track_provider.dart';
 import '../models/track.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../Helpers/string.dart';
+import '../Helpers/globals.dart';
 
 class LastPublishedTrackLink extends StatelessWidget {
+  final Globals globals = Globals();
   final int trackId;
   final VoidCallback onPressed;
 
@@ -33,10 +35,13 @@ class LastPublishedTrackLink extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   CachedNetworkImage(
+                    errorWidget: Image(
+                      image: AssetImage("assets/img/picture-placeholder.png"),
+                    ),
                     height: 120,
                     width: double.maxFinite,
                     fit: BoxFit.cover,
-                    imageUrl: trackSnapshot.data.picture??"",
+                    imageUrl: globals.serverPath+(trackSnapshot.data.picture??""),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.0),

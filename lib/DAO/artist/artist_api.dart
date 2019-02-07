@@ -5,7 +5,7 @@ import 'package:http/http.dart' show Client;
 import '../../Helpers/globals.dart';
 
 class ArtistApi implements ArtistSource {
-  final globals = Globals();
+  final Globals globals = Globals();
   final _client = Client();
 
   Future<List<int>> fetchIds() async {

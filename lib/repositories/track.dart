@@ -2,7 +2,6 @@ import '../DAO/track/track_api.dart';
 import '../DAO/track/track_db.dart';
 import '../DAO/track/track_source.dart';
 import '../DAO/track/track_cache.dart';
-import '../DAO/track/track_db.dart';
 import '../models/track.dart' as TrackModel;
 
 class Track {
@@ -66,7 +65,7 @@ class Track {
   }
 
   Future<List<TrackModel.Track>> fetchLastTracks() {
-    return trackApi.fetchTracksByArtistId(1);
+    return trackApi.fetchLastTracks();
   }
 
   clearCache() async {

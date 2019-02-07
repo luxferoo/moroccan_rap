@@ -28,7 +28,6 @@ class _AudioRadialSeekBarState extends State<AudioRadialSeekBar> {
           playBackProgress = player.position.inMilliseconds /
               player.audioLength.inMilliseconds;
         }
-
         _seekPercent = player.isSeeking ? _seekPercent : null;
         return RadialSeekBar(
           picture: widget.picture,

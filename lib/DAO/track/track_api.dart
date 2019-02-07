@@ -5,7 +5,7 @@ import 'package:http/http.dart' show Client;
 import '../../Helpers/globals.dart';
 
 class TrackApi implements TrackSource {
-  final globals = Globals();
+  final Globals globals = Globals();
   final _client = Client();
 
   @override
@@ -36,6 +36,20 @@ class TrackApi implements TrackSource {
     final response = await _client.get('${globals.tracksRoot}/$id');
     if (response.statusCode == 200)
       return Track.fromMap(jsonDecode(response.body));
+    return null;
+  }
+  @override
+  Future<List<Track>> fetchLastTracks() async {
+    final response = await _client.get(globals.tracksRoot);
+    if (response.statusCode == 200) {
+      final List<Track> tracks = jsonDecode(response.body)
+          .map((track) {
+        return Track.fromMap(track);
+      })
+          .toList()
+          .cast<Track>();
+      return tracks;
+    }
     return null;
   }
 }

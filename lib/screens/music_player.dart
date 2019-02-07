@@ -6,9 +6,11 @@ import '../models/track.dart';
 import '../blocs/track_provider.dart';
 import '../widgets/audio_radial_seek_bar.dart';
 import '../widgets/bottom_controller.dart';
+import '../Helpers/globals.dart';
 
 class MusicPlayer extends StatefulWidget {
   final int startAt;
+  final Globals globals = Globals();
 
   MusicPlayer({this.startAt});
 
@@ -27,7 +29,21 @@ class _MusicPlayerState extends State<MusicPlayer> {
       stream: trackBloc.playlist,
       builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
         if (!snapshot.hasData) {
-          return Container(color: Colors.black);
+          return Container(
+            color: Colors.black,
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              leading: IconButton(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  color: Colors.white,
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ),
+          );
         } else {
           return _buildAudioPlaylist(snapshot.data);
         }
@@ -62,7 +78,8 @@ class _MusicPlayerState extends State<MusicPlayer> {
     return AudioPlaylist(
       startPlayingFromIndex: startAt,
       playlist: trackList.map((Track track) {
-        return track.link;
+        print(widget.globals.serverPath + (track.track??""));
+        return widget.globals.serverPath + (track.track??"");
       }).toList(),
       child: AudioComponent(
         updateMe: [
@@ -82,11 +99,15 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   return DecoratedBox(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                          colorFilter: ColorFilter.mode(
-                              Colors.black87, BlendMode.darken),
-                          fit: BoxFit.cover,
-                          image: CachedNetworkImageProvider(
-                              trackList[playlist.activeIndex].artistPicture??"")),
+                        colorFilter:
+                            ColorFilter.mode(Colors.black87, BlendMode.darken),
+                        fit: BoxFit.cover,
+                        image: CachedNetworkImageProvider(
+                          widget.globals.serverPath +
+                              (trackList[playlist.activeIndex].artistPicture ??
+                                  ""),
+                        ),
+                      ),
                     ),
                     child: Column(
                       children: <Widget>[
@@ -100,8 +121,9 @@ class _MusicPlayerState extends State<MusicPlayer> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               AudioRadialSeekBar(
-                                picture:
-                                    trackList[playlist.activeIndex].picture??"",
+                                picture: widget.globals.serverPath +
+                                    (trackList[playlist.activeIndex].picture ??
+                                        ""),
                               ),
                               Text(
                                 formatDuration(player.audioLength),

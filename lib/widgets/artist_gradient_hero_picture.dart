@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/artist.dart';
+import '../Helpers/globals.dart';
 
 class ArtistGradientHeroPicture extends StatelessWidget {
   final Artist artist;
+  final globals = Globals();
 
   ArtistGradientHeroPicture({@required this.artist});
 
   @override
   Widget build(BuildContext context) {
-
     return Hero(
       tag: "${artist.id}-picture",
       child: DecoratedBox(
@@ -22,9 +23,10 @@ class ArtistGradientHeroPicture extends StatelessWidget {
           ),
         ),
         child: CachedNetworkImage(
-          imageUrl: artist.picture??"",
+          imageUrl: globals.serverPath + (artist.picture ?? ""),
           fit: BoxFit.cover,
-          errorWidget: Image(image: AssetImage("assets/img/picture-placeholder.png")),
+          errorWidget:
+              Image(image: AssetImage("assets/img/picture-placeholder.png")),
         ),
       ),
     );

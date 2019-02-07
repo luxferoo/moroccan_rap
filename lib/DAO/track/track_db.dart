@@ -53,4 +53,10 @@ class TrackDb implements TrackSource, TrackCache{
     return null;
   }
 
+  @override
+  Future<List<Track>> fetchLastTracks() {
+    // TODO: implement fetchLastTracks
+    return null;
+  }
+
 }
