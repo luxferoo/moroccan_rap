@@ -13,8 +13,8 @@ class Home extends StatelessWidget {
     final TrackBloc trackBloc = TrackProvider.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(elevation: 0.0,
+      appBar: AppBar(
+        elevation: 0.0,
         centerTitle: true,
         title: Text(
           "Moroccan Rap",
@@ -23,7 +23,7 @@ class Home extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
       ),
       body: RefreshIndicator(
         child: CustomScrollView(
@@ -69,16 +69,17 @@ class Home extends StatelessWidget {
           itemCount: snapshot.data.length,
           itemBuilder: (context, index) {
             bloc.fetchTrack(snapshot.data[index]);
-            return Card(
-                child: Container(
-                    child: LastPublishedTrackLink(
-                      trackId: snapshot.data[index],
-                      onPressed: () {
-                        bloc.fetchLastTracks();
-                        Navigator.of(context).pushNamed("/player/$index");
-                      },
-                    ),
-                    width: 170));
+            return Container(
+                color: Colors.white,
+                margin: EdgeInsets.all(2.0),
+                child: LastPublishedTrackLink(
+                  trackId: snapshot.data[index],
+                  onPressed: () {
+                    bloc.fetchLastTracks();
+                    Navigator.of(context).pushNamed("/player/$index");
+                  },
+                ),
+                width: 170);
           },
         );
       },
