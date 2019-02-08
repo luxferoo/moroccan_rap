@@ -98,7 +98,7 @@ class Home extends StatelessWidget {
 
         return SliverGrid(
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200.0,
+            maxCrossAxisExtent: 150.0,
           ),
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
