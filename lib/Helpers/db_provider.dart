@@ -33,8 +33,7 @@ class _DbProvider {
           artistName TEXT,
           picture TEXT,
           artistPicture TEXT,
-          link TEXT,
-          duration TEXT
+          link TEXT
         )
         ''');
       },

@@ -9,7 +9,6 @@ class Track {
   @required final String picture;
   @required final String artistPicture;
   @required final String track ;
-  @required final String duration ;
 
   Track.fromMap(Map<String, dynamic> parsedJson)
       : id = parsedJson["id"],
@@ -19,6 +18,5 @@ class Track {
         artistName = parsedJson["artistName"],
         picture = parsedJson["picture"],
         artistPicture = parsedJson["artistPicture"],
-        track = parsedJson["track"],
-        duration = parsedJson["duration"];
+        track = parsedJson["track"];
 }

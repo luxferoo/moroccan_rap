@@ -28,10 +28,6 @@ class TrackTile extends StatelessWidget {
         ),
         title: Text(track.name ?? ""),
         subtitle: Text(track.albumName ?? ""),
-        trailing: Text(
-          track.duration??"00:00",
-          style: TextStyle(color: Colors.grey),
-        ),
         onTap: onTap,
       ),
     );
