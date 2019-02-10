@@ -58,9 +58,9 @@ class Home extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.lastTracksIds,
       builder: (BuildContext context, AsyncSnapshot<List<int>> snapshot) {
-        if (!snapshot.hasData) {
-          return ListView(
-            children: <Widget>[],
+        if (!snapshot.hasData || snapshot.data.length == 0) {
+          return Center(
+            child: Text("Could not fetch data."),
           );
         }
 
@@ -90,9 +90,12 @@ class Home extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.artistIds,
       builder: (BuildContext context, AsyncSnapshot<List<int>> snapshot) {
-        if (!snapshot.hasData) {
-          return SliverPadding(
-            padding: EdgeInsets.all(0.0),
+        if (!snapshot.hasData || snapshot.data.length == 0) {
+          return SliverToBoxAdapter(
+            child: Center(
+              heightFactor: 18,
+              child: Text("Could not fetch data."),
+            ),
           );
         }
 

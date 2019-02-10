@@ -38,14 +38,15 @@ class TrackApi implements TrackSource {
       return Track.fromMap(jsonDecode(response.body));
     return null;
   }
+
   @override
   Future<List<Track>> fetchLastTracks() async {
     final response = await _client.get(globals.tracksRoot);
     if (response.statusCode == 200) {
       final List<Track> tracks = jsonDecode(response.body)
           .map((track) {
-        return Track.fromMap(track);
-      })
+            return Track.fromMap(track);
+          })
           .toList()
           .cast<Track>();
       return tracks;
