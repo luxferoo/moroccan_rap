@@ -5,9 +5,9 @@ class Globals {
     return _singleton;
   }
 
-  String tracksRoot = 'http://192.168.77.143:4000/api/tracks';
-  String artistsRoot = 'http://192.168.77.143:4000/api/artists';
-  String serverPath = 'http://192.168.77.143:4000/';
+  String tracksRoot = 'http://206.189.15.19/api/tracks';
+  String artistsRoot = 'http://206.189.15.19/api/artists';
+  String serverPath = 'http://206.189.15.19/';
 
   Globals._internal();
 }
