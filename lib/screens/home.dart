@@ -13,6 +13,7 @@ class Home extends StatelessWidget {
     final TrackBloc trackBloc = TrackProvider.of(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,

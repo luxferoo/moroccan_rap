@@ -78,7 +78,6 @@ class _MusicPlayerState extends State<MusicPlayer> {
     return AudioPlaylist(
       startPlayingFromIndex: startAt,
       playlist: trackList.map((Track track) {
-        print(widget.globals.serverPath + (track.track??""));
         return widget.globals.serverPath + (track.track??"");
       }).toList(),
       child: AudioComponent(
@@ -100,7 +99,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         colorFilter:
-                            ColorFilter.mode(Colors.black87, BlendMode.darken),
+                            ColorFilter.mode(Colors.black45, BlendMode.darken),
                         fit: BoxFit.cover,
                         image: CachedNetworkImageProvider(
                           widget.globals.serverPath +
