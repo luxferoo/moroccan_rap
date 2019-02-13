@@ -41,7 +41,7 @@ MaterialPageRoute routes(RouteSettings setting) {
       final TrackBloc trackBloc = TrackProvider.of(context);
 
       if (setting.name == "/") {
-        trackBloc.fetchLastTracksIds();
+        trackBloc.fetchLastTracks();
         artistBloc.fetchArtistsIds();
         return Home();
       }

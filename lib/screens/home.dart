@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/track.dart';
 import '../blocs/artist_provider.dart';
 import '../blocs/track_provider.dart';
 import '../widgets/artist_card.dart';
@@ -35,7 +36,7 @@ class Home extends StatelessWidget {
                 children: <Widget>[
                   _buildSectionTitle("Recent tracks"),
                   Container(
-                    height: 220,
+                    height: 230,
                     child: _buildLastPublishedTracks(trackBloc),
                   ),
                   _buildSectionTitle("Artists"),
@@ -48,7 +49,7 @@ class Home extends StatelessWidget {
         onRefresh: () async {
           await ArtistRepos.Artist().clearCache();
           await TrackRepos.Track().clearCache();
-          trackBloc.fetchLastTracksIds();
+          trackBloc.fetchLastTracks();
           artistBloc.fetchArtistsIds();
         },
       ),
@@ -57,26 +58,26 @@ class Home extends StatelessWidget {
 
   Widget _buildLastPublishedTracks(TrackBloc bloc) {
     return StreamBuilder(
-      stream: bloc.lastTracksIds,
-      builder: (BuildContext context, AsyncSnapshot<List<int>> snapshot) {
+      stream: bloc.playlist,
+      builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
         if (!snapshot.hasData || snapshot.data.length == 0) {
           return Center(
             child: Text("Could not fetch data."),
           );
         }
-
+        List<Track> tracks = snapshot.data;
         return ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: snapshot.data.length,
           itemBuilder: (context, index) {
-            bloc.fetchTrack(snapshot.data[index]);
             return Container(
                 color: Colors.white,
                 margin: EdgeInsets.all(2.0),
                 child: LastPublishedTrackLink(
-                  trackId: snapshot.data[index],
+                  picture: tracks[index].picture,
+                  artistName: tracks[index].artistName,
+                  name: tracks[index].name,
                   onPressed: () {
-                    bloc.fetchLastTracks();
                     Navigator.of(context).pushNamed("/player/$index");
                   },
                 ),
