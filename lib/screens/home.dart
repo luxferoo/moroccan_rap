@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/caroussel.dart';
 import '../models/track.dart';
 import '../blocs/artist_provider.dart';
 import '../blocs/track_provider.dart';
@@ -34,6 +35,7 @@ class Home extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  _buildCarousel(),
                   _buildSectionTitle("Recent tracks"),
                   Container(
                     height: 230,
@@ -131,6 +133,82 @@ class Home extends StatelessWidget {
         style: TextStyle(
             color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
         textAlign: TextAlign.left,
+      ),
+    );
+  }
+
+  Widget _buildCarousel() {
+    return Container(
+      height: 300,
+      child: Carousel(
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            alignment: Alignment.bottomLeft,
+            width: double.infinity,
+            height: double.infinity,
+            child: Text(
+              "Track Name",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
+                fit: BoxFit.cover,
+                image: NetworkImage(
+                  'http://206.189.15.19/uploads/track/picture/1550077916387.jpeg',
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            alignment: Alignment.bottomLeft,
+            width: double.infinity,
+            height: double.infinity,
+            child: Text(
+              "Track Name",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
+                fit: BoxFit.cover,
+                image: NetworkImage(
+                  'http://206.189.15.19/uploads/track/picture/1550072992445.jpg',
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            alignment: Alignment.bottomLeft,
+            width: double.infinity,
+            height: double.infinity,
+            child: Text(
+              "Track Name",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
+                fit: BoxFit.cover,
+                image: NetworkImage(
+                  'http://206.189.15.19/uploads/track/picture/1550064103080.jpg',
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
