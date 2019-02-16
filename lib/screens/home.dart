@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/caroussel.dart';
+import '../widgets/carousel.dart';
 import '../models/track.dart';
 import '../blocs/artist_provider.dart';
 import '../blocs/track_provider.dart';
