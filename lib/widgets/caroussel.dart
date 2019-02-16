@@ -20,7 +20,6 @@ class Carousel extends StatefulWidget {
     this.displayDuration = const Duration(seconds: 4)
   }) :
         assert(children != null),
-        assert(children.length > 1),
         assert(animationCurve != null),
         assert(animationDuration != null),
         assert(displayDuration != null);
@@ -36,10 +35,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   TabController _controller;
   Timer _timer;
 
-  int get actualIndex => _controller.index;
-
   int get nextIndex {
-    var nextIndexValue = actualIndex;
+    var nextIndexValue = _controller.index;
 
     if(nextIndexValue < _controller.length - 1)
       nextIndexValue++;
@@ -75,8 +72,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   }
 
   void startAnimating() {
-    _timer?.cancel();
-
     _timer = new Timer.periodic(widget.displayDuration, (_) => this._controller.animateTo(
         this.nextIndex,
         curve: widget.animationCurve,
