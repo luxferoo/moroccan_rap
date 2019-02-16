@@ -17,7 +17,7 @@ class Carousel extends StatefulWidget {
     this.children,
     this.animationCurve = Curves.ease,
     this.animationDuration = const Duration(milliseconds: 250),
-    this.displayDuration = const Duration(seconds: 2)
+    this.displayDuration = const Duration(seconds: 4)
   }) :
         assert(children != null),
         assert(children.length > 1),
