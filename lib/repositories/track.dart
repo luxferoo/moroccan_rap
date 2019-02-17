@@ -16,10 +16,6 @@ class Track {
     TrackDb(),
   ];
 
-  Future<List<int>> fetchLastIds() {
-    return trackApi.fetchLastIds();
-  }
-
   Future<List<TrackModel.Track>> fetchTracksByArtistId(int id) async {
     List<TrackModel.Track> trackList;
     TrackSource source;
@@ -64,8 +60,8 @@ class Track {
     return track;
   }
 
-  Future<List<TrackModel.Track>> fetchLastTracks() {
-    return trackApi.fetchLastTracks();
+  Future<List<TrackModel.Track>> fetchRecentTracks() {
+    return trackApi.fetchRecentTracks();
   }
 
   clearCache() async {

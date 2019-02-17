@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
+import 'package:rxdart/rxdart.dart';
 import '../Helpers/string.dart';
 import '../models/track.dart';
-import '../blocs/track_provider.dart';
 import '../widgets/audio_radial_seek_bar.dart';
 import '../widgets/bottom_controller.dart';
 import '../Helpers/globals.dart';
@@ -11,22 +11,20 @@ import '../Helpers/globals.dart';
 class MusicPlayer extends StatefulWidget {
   final int startAt;
   final Globals globals = Globals();
+  final Observable<List<Track>> playlistStreamSource;
 
-  MusicPlayer({this.startAt});
+  MusicPlayer({this.startAt = 0, @required this.playlistStreamSource})
+      : assert(playlistStreamSource != null);
 
   @override
   State<StatefulWidget> createState() => _MusicPlayerState();
 }
 
 class _MusicPlayerState extends State<MusicPlayer> {
-  int startAt = 0;
-
   @override
   Widget build(BuildContext context) {
-    startAt = widget.startAt ?? 0;
-    final trackBloc = TrackProvider.of(context);
     return StreamBuilder(
-      stream: trackBloc.playlist,
+      stream: widget.playlistStreamSource,
       builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -76,9 +74,10 @@ class _MusicPlayerState extends State<MusicPlayer> {
     }
 
     return AudioPlaylist(
-      startPlayingFromIndex: startAt,
+      startPlayingFromIndex: widget.startAt,
       playlist: trackList.map((Track track) {
-        return widget.globals.serverPath + (track.track??"");
+        print(track.artistName);
+        return widget.globals.serverPath + (track.track ?? "");
       }).toList(),
       child: AudioComponent(
         updateMe: [

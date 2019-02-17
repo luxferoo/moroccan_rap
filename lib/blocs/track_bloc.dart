@@ -7,13 +7,11 @@ class TrackBloc {
   final _trackFetcher = PublishSubject<int>();
   final _tracksByArtistFetcher = PublishSubject<int>();
   final _tracksByArtistOutput = ReplaySubject<Future<List<TrackModel.Track>>>();
-  final _playlist = BehaviorSubject<List<TrackModel.Track>>();
-  final _trackOutput = BehaviorSubject<Map<int, Future<TrackModel.Track>>>();
+  final _recentTracksPlaylist = PublishSubject<List<TrackModel.Track>>();
+  final _artistPlaylist = PublishSubject<List<TrackModel.Track>>();
 
-  Observable<List<TrackModel.Track>> get playlist => _playlist.stream;
-
-  Observable<Map<int, Future<TrackModel.Track>>> get track =>
-      _trackOutput.stream;
+  Observable<List<TrackModel.Track>> get recentTracksPlaylist => _recentTracksPlaylist.stream;
+  Observable<List<TrackModel.Track>> get artistPlaylist => _artistPlaylist.stream;
 
   Observable<Future<List<TrackModel.Track>>> get tracksByArtists =>
       _tracksByArtistOutput.stream;
@@ -26,7 +24,6 @@ class TrackBloc {
     _tracksByArtistFetcher.stream
         .transform(_tracksByArtistTransformer())
         .pipe(_tracksByArtistOutput);
-    _trackFetcher.stream.transform(_trackTransformer()).pipe(_trackOutput);
   }
 
   _tracksByArtistTransformer() {
@@ -36,29 +33,21 @@ class TrackBloc {
     });
   }
 
-  _trackTransformer() {
-    return ScanStreamTransformer(
-        (Map<int, Future<TrackModel.Track>> cache, int id, int index) {
-      cache[id] = _repository.fetchTrack(id);
-      return cache;
-    }, <int, Future<TrackModel.Track>>{});
-  }
-
-  fetchLastTracks() async {
-    final tracks = await _repository.fetchLastTracks();
-    _playlist.sink.add(tracks);
+  fetchRecentTracks() async {
+    final tracks = await _repository.fetchRecentTracks();
+    _recentTracksPlaylist.sink.add(tracks);
   }
 
   fetchArtistPlaylist(int artistId) async {
     final tracks = await _repository.fetchTracksByArtistId(artistId);
-    _playlist.sink.add(tracks);
+    _artistPlaylist.sink.add(tracks);
   }
 
   dispose() {
     _tracksByArtistFetcher.close();
     _tracksByArtistOutput.close();
     _trackFetcher.close();
-    _playlist.close();
-    _trackOutput.close();
+    _recentTracksPlaylist.close();
+    _artistPlaylist.close();
   }
 }

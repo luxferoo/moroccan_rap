@@ -7,13 +7,10 @@ class SplashScreen extends StatelessWidget {
       Duration(seconds: 3),
       () => Navigator.of(context).pushReplacementNamed("/home"),
     );
-    return Hero(
-      tag: "splash_icon",
-      child: Container(
-        color: Colors.black,
-        child: Center(
-          child: Image.asset("assets/img/ic_launcher-xxxhdpi.png"),
-        ),
+    return Container(
+      color: Colors.black,
+      child: Center(
+        child: Image.asset("assets/img/ic_launcher-xxxhdpi.png"),
       ),
     );
   }

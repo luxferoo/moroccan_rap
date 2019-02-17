@@ -9,14 +9,6 @@ class TrackApi implements TrackSource {
   final _client = Client();
 
   @override
-  Future<List<int>> fetchLastIds() async {
-    final response = await _client.get('${globals.tracksRoot}/recentIds');
-    if (response.statusCode == 200)
-      return jsonDecode(response.body).cast<int>();
-    return null;
-  }
-
-  @override
   Future<List<Track>> fetchTracksByArtistId(int id) async {
     final response = await _client.get('${globals.artistsRoot}/$id/tracks');
     if (response.statusCode == 200) {
@@ -40,7 +32,7 @@ class TrackApi implements TrackSource {
   }
 
   @override
-  Future<List<Track>> fetchLastTracks() async {
+  Future<List<Track>> fetchRecentTracks() async {
     final response = await _client.get(globals.tracksRoot);
     if (response.statusCode == 200) {
       final List<Track> tracks = jsonDecode(response.body)

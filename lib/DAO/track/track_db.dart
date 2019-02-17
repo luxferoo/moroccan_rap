@@ -18,11 +18,6 @@ class TrackDb implements TrackSource, TrackCache{
   }
 
   @override
-  Future<List<int>> fetchLastIds() {
-    return null;
-  }
-
-  @override
   Future<Track> fetchTrack(int id) async {
     final maps = await dbProvider.db.query(
       TABLE_TRACK,
@@ -54,8 +49,8 @@ class TrackDb implements TrackSource, TrackCache{
   }
 
   @override
-  Future<List<Track>> fetchLastTracks() {
-    // TODO: implement fetchLastTracks
+  Future<List<Track>> fetchRecentTracks() {
+    // TODO: implement fetchRecentTracks
     return null;
   }
 

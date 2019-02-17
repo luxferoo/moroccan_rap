@@ -19,11 +19,8 @@ class Home extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
-        leading: Hero(
-          tag: "splash_icon",
-          child: Image.asset(
-            "assets/img/ic_launcher-hdpi.png",
-          ),
+        leading: Image.asset(
+          "assets/img/ic_launcher-hdpi.png",
         ),
         centerTitle: true,
         title: Text(
@@ -48,7 +45,7 @@ class Home extends StatelessWidget {
                     _buildSectionTitle("Recent tracks"),
                     Container(
                       height: 230,
-                      child: _buildLastPublishedTracks(trackBloc),
+                      child: _buildRecentTracks(trackBloc),
                     ),
                     _buildSectionTitle("Artists"),
                   ],
@@ -61,16 +58,16 @@ class Home extends StatelessWidget {
         onRefresh: () async {
           await ArtistRepos.Artist().clearCache();
           await TrackRepos.Track().clearCache();
-          trackBloc.fetchLastTracks();
+          trackBloc.fetchRecentTracks();
           artistBloc.fetchArtistsIds();
         },
       ),
     );
   }
 
-  Widget _buildLastPublishedTracks(TrackBloc bloc) {
+  Widget _buildRecentTracks(TrackBloc bloc) {
     return StreamBuilder(
-      stream: bloc.playlist,
+      stream: bloc.recentTracksPlaylist,
       builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
         if (!snapshot.hasData || snapshot.data.length == 0) {
           return Center(
@@ -90,7 +87,8 @@ class Home extends StatelessWidget {
                   artistName: tracks[index].artistName,
                   name: tracks[index].name,
                   onPressed: () {
-                    Navigator.of(context).pushNamed("/player/$index");
+                    Navigator.of(context)
+                        .pushNamed("/recent-tracks-player/$index");
                   },
                 ),
                 width: 170);
@@ -151,7 +149,26 @@ class Home extends StatelessWidget {
     return Container(
       height: 200,
       child: Carousel(
-        children: [new CarouselItem()],
+        children: [
+          new CarouselItem(
+              trackId: 1,
+              trackName: "Track Name 1",
+              artistName: "Artist Name 1",
+              picture:
+                  "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
+          new CarouselItem(
+              trackId: 2,
+              trackName: "Track Name 2",
+              artistName: "Artist Name 2",
+              picture:
+                  "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
+          new CarouselItem(
+              trackId: 3,
+              trackName: "Track Name 3",
+              artistName: "Artist Name 3",
+              picture:
+                  "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
+        ],
       ),
     );
   }

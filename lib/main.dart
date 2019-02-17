@@ -46,7 +46,7 @@ MaterialPageRoute routes(RouteSettings setting) {
       }
 
       if (setting.name == "/home") {
-        trackBloc.fetchLastTracks();
+        trackBloc.fetchRecentTracks();
         artistBloc.fetchArtistsIds();
         return Home();
       }
@@ -60,10 +60,24 @@ MaterialPageRoute routes(RouteSettings setting) {
           artistId: artistId,
         );
       }
-      final playerRegex = RegExp(r"/player/[0-9]*$");
-      if (playerRegex.hasMatch(setting.name)) {
-        final index = int.parse(setting.name.replaceFirst('/player/', ''));
-        return MusicPlayer(startAt: index);
+      final recentTracksPlayerRegex = RegExp(r"/recent-tracks-player/[0-9]*$");
+      if (recentTracksPlayerRegex.hasMatch(setting.name)) {
+        final index =
+            int.parse(setting.name.replaceFirst('/recent-tracks-player/', ''));
+        return MusicPlayer(
+            startAt: index,
+            playlistStreamSource: trackBloc.recentTracksPlaylist);
+      }
+
+      final artistPlaylistPlayerRegex =
+          RegExp(r"/artist-playlist-player/[0-9]*$");
+      if (artistPlaylistPlayerRegex.hasMatch(setting.name)) {
+        final index = int.parse(
+            setting.name.replaceFirst('/artist-playlist-player/', ''));
+        return MusicPlayer(
+          startAt: index,
+          playlistStreamSource: trackBloc.artistPlaylist,
+        );
       }
     },
   );

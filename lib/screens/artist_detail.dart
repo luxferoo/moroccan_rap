@@ -185,7 +185,7 @@ class _ArtistState extends State<ArtistDetail> {
                   track: tracks[index],
                   onTap: () {
                     bloc.fetchArtistPlaylist(widget.artistId);
-                    Navigator.of(context).pushNamed('/player/$index');
+                    Navigator.of(context).pushNamed('/artist-playlist-player/$index');
                   }),
               Divider(
                 height: 0.0,

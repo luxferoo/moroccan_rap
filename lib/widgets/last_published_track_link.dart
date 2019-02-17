@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../Helpers/string.dart';
 import '../Helpers/globals.dart';
+import '../widgets/play_button.dart';
 
 class LastPublishedTrackLink extends StatelessWidget {
   final Globals globals = Globals();
@@ -48,28 +49,7 @@ class LastPublishedTrackLink extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(top: 10, right: 30, left: 30),
-            child: FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0)),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.play_circle_outline,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "Play",
-                      style: TextStyle(color: Colors.white),
-                    )
-                  ]),
-              color: Theme.of(context).primaryColor,
-              onPressed: onPressed,
-            ),
+            child: PlayButton(onPressed: onPressed),
           ),
         ],
       ),
