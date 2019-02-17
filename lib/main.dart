@@ -24,6 +24,7 @@ class App extends StatelessWidget {
       child: ArtistProvider(
         child: MaterialApp(
           theme: ThemeData(
+              brightness: Brightness.dark,
               fontFamily: "Montserrat Regular",
               primaryColor: Colors.deepPurple,
               accentColor: Colors.deepPurpleAccent),

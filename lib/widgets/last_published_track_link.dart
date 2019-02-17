@@ -20,6 +20,7 @@ class LastPublishedTrackLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.black87,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -36,15 +37,14 @@ class LastPublishedTrackLink extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 5.0),
             child: Text(
               cropText(capitalize(name ?? ""), 10),
-              style: TextStyle(fontSize: 15, letterSpacing: 3.0),
+              style: TextStyle(fontSize: 15),
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.0),
             child: Text(
               cropText(capitalize(artistName ?? ""), 12),
-              style: TextStyle(
-                  color: Colors.grey, fontSize: 13, letterSpacing: 1.0),
+              style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
           ),
           Container(

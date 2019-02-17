@@ -26,7 +26,7 @@ class CarouselItem extends StatelessWidget {
           position: DecorationPosition.foreground,
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
-              end: Alignment(0.0, -0.5),
+              end: Alignment(0.0, -1.0),
               begin: Alignment(0.0, 1.0),
               colors: <Color>[
                 Colors.black,

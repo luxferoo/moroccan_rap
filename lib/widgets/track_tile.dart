@@ -13,7 +13,6 @@ class TrackTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Ink(
-      color: Colors.white,
       child: ListTile(
         leading: CachedNetworkImage(
           errorWidget: Image(
@@ -21,8 +20,8 @@ class TrackTile extends StatelessWidget {
             width: 50,
             image: AssetImage("assets/img/picture-placeholder.png"),
           ),
-          height: 50,
-          width: 50,
+          height: 70,
+          width: 70,
           fit: BoxFit.cover,
           imageUrl: globals.serverPath+(track.picture??""),
         ),

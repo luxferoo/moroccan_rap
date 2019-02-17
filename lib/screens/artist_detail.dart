@@ -41,7 +41,7 @@ class _ArtistState extends State<ArtistDetail> {
     final trackBloc = TrackProvider.of(context);
 
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         body: FutureBuilder(
           future: TrackRepo.Track().fetchTracksByArtistId(widget.artistId),
           builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
@@ -188,6 +188,7 @@ class _ArtistState extends State<ArtistDetail> {
                     Navigator.of(context).pushNamed('/artist-playlist-player/$index');
                   }),
               Divider(
+                color: Colors.white,
                 height: 0.0,
               )
             ],

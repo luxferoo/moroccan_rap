@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moroccan_rap/Helpers/string.dart';
 import '../widgets/carousel.dart';
 import '../models/track.dart';
 import '../blocs/artist_provider.dart';
@@ -16,17 +17,18 @@ class Home extends StatelessWidget {
     final TrackBloc trackBloc = TrackProvider.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       appBar: AppBar(
         elevation: 0.0,
-        leading: Image.asset(
-          "assets/img/ic_launcher-hdpi.png",
-        ),
+        leading: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Image.asset(
+              "assets/img/ic_launcher-hdpi.png",
+            )),
         centerTitle: true,
         title: Text(
           "Moroccan Rap",
           style: TextStyle(
-            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -34,7 +36,7 @@ class Home extends StatelessWidget {
       ),
       body: RefreshIndicator(
         child: Padding(
-          padding: EdgeInsets.only(top: 10.0, left: 17.0, right: 17.0),
+          padding: EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0),
           child: CustomScrollView(
             slivers: <Widget>[
               SliverToBoxAdapter(
@@ -138,8 +140,7 @@ class Home extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 13, horizontal: 12),
       child: Text(
         title,
-        style: TextStyle(
-            color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         textAlign: TextAlign.left,
       ),
     );
@@ -147,25 +148,25 @@ class Home extends StatelessWidget {
 
   Widget _buildCarousel() {
     return Container(
-      height: 200,
+      height: 280,
       child: Carousel(
         children: [
           new CarouselItem(
               trackId: 1,
-              trackName: "Track Name 1",
-              artistName: "Artist Name 1",
+              trackName: cropText(capitalize("Track Name 1"),15),
+              artistName: cropText(capitalize("Artist Name 1"),20),
               picture:
                   "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
           new CarouselItem(
               trackId: 2,
-              trackName: "Track Name 2",
-              artistName: "Artist Name 2",
+              trackName: cropText(capitalize("Track Name 2"),15),
+              artistName: cropText(capitalize("Artist Name 2"),20),
               picture:
                   "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
           new CarouselItem(
               trackId: 3,
-              trackName: "Track Name 3",
-              artistName: "Artist Name 3",
+              trackName: cropText(capitalize("Track Name 3"),15),
+              artistName: cropText(capitalize("Artist Name 3"),20),
               picture:
                   "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
         ],
