@@ -89,42 +89,43 @@ class _ArtistState extends State<ArtistDetail> {
       background: Hero(
         tag: "${widget.artistId}-picture",
         child: DecoratedBox(
-            position: DecorationPosition.foreground,
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                end: Alignment(1.0, 0.0),
-                begin: Alignment(0.0, -2),
-                colors: <Color>[Colors.black, Colors.transparent],
-              ),
+          position: DecorationPosition.foreground,
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              end: Alignment(1.0, 0.0),
+              begin: Alignment(0.0, -2),
+              colors: <Color>[Colors.black, Colors.transparent],
             ),
-            child: StreamBuilder(
-              stream: bloc.artist,
-              builder: (BuildContext context,
-                  AsyncSnapshot<Map<int, Future<Artist>>> snapshot) {
-                if (!snapshot.hasData) {
-                  return Container(color: Colors.black);
-                }
-                return FutureBuilder(
-                  future: snapshot.data[widget.artistId],
-                  builder: (BuildContext context,
-                      AsyncSnapshot<Artist> artistSnapshot) {
-                    if (!artistSnapshot.hasData) {
-                      return Container(color: Colors.black);
-                    }
-                    return CachedNetworkImage(
-                      errorWidget: Image(
-                        image: AssetImage("assets/img/picture-placeholder.png"),
-                      ),
-                      imageUrl: widget.globals.serverPath +
-                          (artistSnapshot.data.picture ?? ""),
-                      fit: BoxFit.cover,
-                      height: double.infinity,
-                      width: double.infinity,
-                    );
-                  },
-                );
-              },
-            )),
+          ),
+          child: StreamBuilder(
+            stream: bloc.artist,
+            builder: (BuildContext context,
+                AsyncSnapshot<Map<int, Future<Artist>>> snapshot) {
+              if (!snapshot.hasData) {
+                return Container(color: Colors.black);
+              }
+              return FutureBuilder(
+                future: snapshot.data[widget.artistId],
+                builder: (BuildContext context,
+                    AsyncSnapshot<Artist> artistSnapshot) {
+                  if (!artistSnapshot.hasData) {
+                    return Container(color: Colors.black);
+                  }
+                  return CachedNetworkImage(
+                    errorWidget: Image(
+                      image: AssetImage("assets/img/picture-placeholder.png"),
+                    ),
+                    imageUrl: widget.globals.serverPath +
+                        (artistSnapshot.data.picture ?? ""),
+                    fit: BoxFit.cover,
+                    height: double.infinity,
+                    width: double.infinity,
+                  );
+                },
+              );
+            },
+          ),
+        ),
       ),
     );
   }

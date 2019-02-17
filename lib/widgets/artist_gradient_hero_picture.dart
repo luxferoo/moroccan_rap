@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../models/artist.dart';
 import '../Helpers/globals.dart';
+import '../models/artist.dart';
 
 class ArtistGradientHeroPicture extends StatelessWidget {
   final Artist artist;
   final globals = Globals();
 
-  ArtistGradientHeroPicture({@required this.artist});
+  ArtistGradientHeroPicture({@required this.artist}) : assert(artist != null);
 
   @override
   Widget build(BuildContext context) {

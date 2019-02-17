@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'screens/splash_screen.dart';
 import 'screens/home.dart';
 import 'blocs/artist_provider.dart';
 import 'blocs/track_provider.dart';
@@ -41,6 +42,10 @@ MaterialPageRoute routes(RouteSettings setting) {
       final TrackBloc trackBloc = TrackProvider.of(context);
 
       if (setting.name == "/") {
+        return SplashScreen();
+      }
+
+      if (setting.name == "/home") {
         trackBloc.fetchLastTracks();
         artistBloc.fetchArtistsIds();
         return Home();

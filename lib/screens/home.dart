@@ -7,6 +7,7 @@ import '../widgets/artist_card.dart';
 import '../widgets/last_published_track_link.dart';
 import '../repositories/artist.dart' as ArtistRepos;
 import '../repositories/track.dart' as TrackRepos;
+import '../widgets/carousel_item.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -18,6 +19,12 @@ class Home extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
+        leading: Hero(
+          tag: "splash_icon",
+          child: Image.asset(
+            "assets/img/ic_launcher-hdpi.png",
+          ),
+        ),
         centerTitle: true,
         title: Text(
           "Moroccan Rap",
@@ -29,24 +36,27 @@ class Home extends StatelessWidget {
         backgroundColor: Colors.transparent,
       ),
       body: RefreshIndicator(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _buildCarousel(),
-                  _buildSectionTitle("Recent tracks"),
-                  Container(
-                    height: 230,
-                    child: _buildLastPublishedTracks(trackBloc),
-                  ),
-                  _buildSectionTitle("Artists"),
-                ],
+        child: Padding(
+          padding: EdgeInsets.only(top: 10.0, left: 17.0, right: 17.0),
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _buildCarousel(),
+                    _buildSectionTitle("Recent tracks"),
+                    Container(
+                      height: 230,
+                      child: _buildLastPublishedTracks(trackBloc),
+                    ),
+                    _buildSectionTitle("Artists"),
+                  ],
+                ),
               ),
-            ),
-            _buildArtistList(artistBloc)
-          ],
+              _buildArtistList(artistBloc)
+            ],
+          ),
         ),
         onRefresh: () async {
           await ArtistRepos.Artist().clearCache();
@@ -139,59 +149,9 @@ class Home extends StatelessWidget {
 
   Widget _buildCarousel() {
     return Container(
-      height: 300,
-      padding: EdgeInsets.all(10.0),
+      height: 200,
       child: Carousel(
-        children: [
-          Container(
-            margin: EdgeInsets.all(5.0),
-            padding: EdgeInsets.all(10),
-            alignment: Alignment.bottomLeft,
-            width: double.infinity,
-            height: double.infinity,
-            child: Text(
-              "Track Name",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10.2)),
-              image: DecorationImage(
-                colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  'http://206.189.15.19/uploads/track/picture/1550077916387.jpeg',
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(5.0),
-            padding: EdgeInsets.all(10),
-            alignment: Alignment.bottomLeft,
-            width: double.infinity,
-            height: double.infinity,
-            child: Text(
-              "Track Name",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10.2)),
-              image: DecorationImage(
-                colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  'http://206.189.15.19/uploads/track/picture/1550072992445.jpg',
-                ),
-              ),
-            ),
-          ),
-        ],
+        children: [new CarouselItem()],
       ),
     );
   }
