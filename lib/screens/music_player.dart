@@ -76,8 +76,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
     return AudioPlaylist(
       startPlayingFromIndex: widget.startAt,
       playlist: trackList.map((Track track) {
-        print(track.artistName);
-        return widget.globals.serverPath + (track.track ?? "");
+        return widget.globals.trackStreamPath + track.track;
       }).toList(),
       child: AudioComponent(
         updateMe: [
