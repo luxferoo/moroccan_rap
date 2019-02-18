@@ -5,7 +5,7 @@ import '../models/track.dart';
 import '../blocs/artist_provider.dart';
 import '../blocs/track_provider.dart';
 import '../widgets/artist_card.dart';
-import '../widgets/last_published_track_link.dart';
+import '../widgets/recent_published_track_link.dart';
 import '../repositories/artist.dart' as ArtistRepos;
 import '../repositories/track.dart' as TrackRepos;
 import '../widgets/carousel_item.dart';
@@ -18,35 +18,19 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        elevation: 0.0,
-        leading: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Image.asset(
-              "assets/img/ic_launcher-hdpi.png",
-            )),
-        centerTitle: true,
-        title: Text(
-          "Moroccan Rap",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-      ),
       body: RefreshIndicator(
         child: Padding(
           padding: EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0),
           child: CustomScrollView(
             slivers: <Widget>[
+              _buildSliverAppBar(),
               SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _buildCarousel(),
                     _buildSectionTitle("Recent tracks"),
                     Container(
-                      height: 230,
+                      height: 220,
                       child: _buildRecentTracks(trackBloc),
                     ),
                     _buildSectionTitle("Artists"),
@@ -84,7 +68,7 @@ class Home extends StatelessWidget {
             return Container(
                 color: Colors.white,
                 margin: EdgeInsets.all(2.0),
-                child: LastPublishedTrackLink(
+                child: RecentPublishedTrackLink(
                   picture: tracks[index].picture,
                   artistName: tracks[index].artistName,
                   name: tracks[index].name,
@@ -146,27 +130,34 @@ class Home extends StatelessWidget {
     );
   }
 
+  Widget _buildSliverAppBar() {
+    return SliverAppBar(
+      expandedHeight: 300.0,
+      pinned: true,
+      flexibleSpace: _buildCarousel(),
+    );
+  }
+
   Widget _buildCarousel() {
     return Container(
-      height: 280,
       child: Carousel(
         children: [
           new CarouselItem(
               trackId: 1,
-              trackName: cropText(capitalize("Track Name 1"),15),
-              artistName: cropText(capitalize("Artist Name 1"),20),
+              trackName: cropText(capitalize("Track Name 1"), 15),
+              artistName: cropText(capitalize("Artist Name 1"), 20),
               picture:
                   "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
           new CarouselItem(
               trackId: 2,
-              trackName: cropText(capitalize("Track Name 2"),15),
-              artistName: cropText(capitalize("Artist Name 2"),20),
+              trackName: cropText(capitalize("Track Name 2"), 15),
+              artistName: cropText(capitalize("Artist Name 2"), 20),
               picture:
                   "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
           new CarouselItem(
               trackId: 3,
-              trackName: cropText(capitalize("Track Name 3"),15),
-              artistName: cropText(capitalize("Artist Name 3"),20),
+              trackName: cropText(capitalize("Track Name 3"), 15),
+              artistName: cropText(capitalize("Artist Name 3"), 20),
               picture:
                   "http://206.189.15.19/uploads/track/picture/1550077916387.jpeg"),
         ],

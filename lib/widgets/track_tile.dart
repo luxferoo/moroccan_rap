@@ -16,17 +16,20 @@ class TrackTile extends StatelessWidget {
       child: ListTile(
         leading: CachedNetworkImage(
           errorWidget: Image(
-            height: 50,
-            width: 50,
+            height: 55,
+            width: 55,
             image: AssetImage("assets/img/picture-placeholder.png"),
           ),
-          height: 70,
-          width: 70,
+          height: 55,
+          width: 55,
           fit: BoxFit.cover,
-          imageUrl: globals.serverPath+(track.picture??""),
+          imageUrl: globals.serverPath + (track.picture ?? ""),
         ),
         title: Text(track.name ?? ""),
-        subtitle: Text(track.albumName ?? ""),
+        subtitle: Text(
+          track.albumName ?? "unknown album",
+          style: TextStyle(color: Colors.grey),
+        ),
         onTap: onTap,
       ),
     );

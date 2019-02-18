@@ -182,11 +182,13 @@ class _ArtistState extends State<ArtistDetail> {
           return Column(
             children: <Widget>[
               TrackTile(
-                  track: tracks[index],
-                  onTap: () {
-                    bloc.fetchArtistPlaylist(widget.artistId);
-                    Navigator.of(context).pushNamed('/artist-playlist-player/$index');
-                  }),
+                track: tracks[index],
+                onTap: () {
+                  bloc.fetchArtistPlaylist(widget.artistId);
+                  Navigator.of(context)
+                      .pushNamed('/artist-playlist-player/$index');
+                },
+              ),
               Divider(
                 color: Colors.white,
                 height: 0.0,

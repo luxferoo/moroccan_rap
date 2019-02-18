@@ -4,7 +4,7 @@ import '../Helpers/string.dart';
 import '../Helpers/globals.dart';
 import '../widgets/play_button.dart';
 
-class LastPublishedTrackLink extends StatelessWidget {
+class RecentPublishedTrackLink extends StatelessWidget {
   final Globals globals = Globals();
   final VoidCallback onPressed;
   @required
@@ -14,7 +14,7 @@ class LastPublishedTrackLink extends StatelessWidget {
   @required
   final String artistName;
 
-  LastPublishedTrackLink(
+  RecentPublishedTrackLink(
       {this.picture, this.name, this.artistName, this.onPressed});
 
   @override
