@@ -42,8 +42,8 @@ android {
         applicationId "com.luxfero.moroccanrap"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 5
-        versionName "0.0.5"
+        versionCode 6
+        versionName "0.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
