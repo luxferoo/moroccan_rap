@@ -55,6 +55,7 @@ flutter:
     - assets/img/picture-placeholder.png
     - assets/img/ic_launcher-hdpi.png
     - assets/img/ic_launcher-xxxhdpi.png
+    - assets/img/splash_image.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
