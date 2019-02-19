@@ -62,35 +62,32 @@ MaterialPageRoute routes(RouteSettings setting) {
           artistId: artistId,
         );
       }
-      final recentTracksPlayerRegex = RegExp(r"/recent-tracks-player/[0-9]*$");
-      if (recentTracksPlayerRegex.hasMatch(setting.name)) {
-        final index =
-            int.parse(setting.name.replaceFirst('/recent-tracks-player/', ''));
-        return MusicPlayer(
-            startAt: index,
-            playlistStreamSource: trackBloc.recentTracksPlaylist);
-      }
 
-      final artistPlaylistPlayerRegex =
-          RegExp(r"/artist-playlist-player/[0-9]*$");
-      if (artistPlaylistPlayerRegex.hasMatch(setting.name)) {
-        final index = int.parse(
-            setting.name.replaceFirst('/artist-playlist-player/', ''));
-        return MusicPlayer(
-          startAt: index,
-          playlistStreamSource: trackBloc.artistPlaylist,
-        );
-      }
-
-      final carouselPlaylistPlayerRegex =
-          RegExp(r"/carousel-playlist-player/[0-9]*$");
-      if (carouselPlaylistPlayerRegex.hasMatch(setting.name)) {
-        final index = int.parse(
-            setting.name.replaceFirst('/carousel-playlist-player/', ''));
-        return MusicPlayer(
-          startAt: index,
-          playlistStreamSource: trackBloc.carouselPlaylist,
-        );
+      List<String> splitted = setting.name.split("/");
+      print(splitted);
+      if (splitted[1] == "player") {
+        String subRoute = splitted[2];
+        int index = int.parse(splitted[3]);
+        switch (subRoute) {
+          case "recent":
+            return MusicPlayer(
+              startAt: index,
+              playlistStreamSource: trackBloc.recentTracksPlaylist,
+            );
+            break;
+          case "artist":
+            return MusicPlayer(
+              startAt: index,
+              playlistStreamSource: trackBloc.artistPlaylist,
+            );
+            break;
+          case "carousel":
+            return MusicPlayer(
+              startAt: index,
+              playlistStreamSource: trackBloc.carouselPlaylist,
+            );
+            break;
+        }
       }
     },
   );

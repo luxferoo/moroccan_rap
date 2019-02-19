@@ -7,11 +7,10 @@ class BottomControls extends StatefulWidget {
   final String artistName;
   final AudioPlayer audioPlayer;
 
-  BottomControls({
-    @required this.songTitle,
-    @required this.artistName,
-    @required this.audioPlayer
-  });
+  BottomControls(
+      {@required this.songTitle,
+      @required this.artistName,
+      @required this.audioPlayer});
 
   @override
   BottomControlsState createState() => BottomControlsState();
@@ -41,7 +40,7 @@ class BottomControlsState extends State<BottomControls> {
               text: '',
               children: [
                 TextSpan(
-                    text: "${widget.songTitle??""}\n",
+                    text: "${widget.songTitle ?? ""}\n",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.0,

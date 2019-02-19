@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:moroccan_rap/Helpers/string.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import '../widgets/carousel.dart';
+import '../Helpers/admob.dart';
+import '../Helpers/string.dart';
 import '../models/track.dart';
 import '../blocs/artist_provider.dart';
 import '../blocs/track_provider.dart';
@@ -19,11 +21,18 @@ class Home extends StatelessWidget {
     final ArtistBloc artistBloc = ArtistProvider.of(context);
     final TrackBloc trackBloc = TrackProvider.of(context);
 
+    myBanner
+      ..load()
+      ..show(
+        //anchorOffset: 60.0,
+        anchorType: AnchorType.bottom,
+      );
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: RefreshIndicator(
         child: Padding(
-          padding: EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0),
+          padding: EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0, bottom: 50.0),
           child: CustomScrollView(
             slivers: <Widget>[
               _buildSliverAppBar(trackBloc),
@@ -78,7 +87,7 @@ class Home extends StatelessWidget {
                   name: tracks[index].name,
                   onPressed: () {
                     Navigator.of(context)
-                        .pushNamed("/recent-tracks-player/$index");
+                        .pushNamed("/player/recent/$index");
                   },
                 ),
                 width: 170);
@@ -106,7 +115,7 @@ class Home extends StatelessWidget {
             maxCrossAxisExtent: 150.0,
           ),
           delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
+            (BuildContext context, int index) {
               bloc.fetchArtist(snapshot.data[index]);
               return ArtistCard(
                 artistId: snapshot.data[index],
@@ -154,10 +163,8 @@ class Home extends StatelessWidget {
                 trackName: cropText(capitalize(track.name), 15),
                 artistName: cropText(capitalize(track.artistName), 20),
                 picture: globals.serverPath + track.picture,
-                onPressed: () =>
-                    Navigator.of(context)
-                        .pushNamed('/carousel-playlist-player/${snapshot.data.indexOf(track)}')
-                ,
+                onPressed: () => Navigator.of(context).pushNamed(
+                    '/player/carousel/${snapshot.data.indexOf(track)}'),
               );
             }).toList(),
           );

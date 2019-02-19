@@ -180,7 +180,7 @@ class _ArtistState extends State<ArtistDetail> {
                 onTap: () {
                   bloc.fetchArtistPlaylist(widget.artistId);
                   Navigator.of(context)
-                      .pushNamed('/artist-playlist-player/$index');
+                      .pushNamed('/player/artist/$index');
                 },
               ),
               Divider(

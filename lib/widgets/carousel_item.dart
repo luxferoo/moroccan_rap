@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/play_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CarouselItem extends StatelessWidget {
   final String picture;
@@ -37,8 +38,8 @@ class CarouselItem extends StatelessWidget {
               ],
             ),
           ),
-          child: new Image.network(
-            picture,
+          child: new CachedNetworkImage(
+            imageUrl: picture,
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

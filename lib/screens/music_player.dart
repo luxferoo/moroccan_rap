@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import '../Helpers/admob.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
 import 'package:rxdart/rxdart.dart';
@@ -23,6 +25,13 @@ class MusicPlayer extends StatefulWidget {
 class _MusicPlayerState extends State<MusicPlayer> {
   @override
   Widget build(BuildContext context) {
+    myInterstitial
+      ..load()
+      ..show(
+        anchorType: AnchorType.bottom,
+        anchorOffset: 0.0,
+      );
+
     return StreamBuilder(
       stream: widget.playlistStreamSource,
       builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
@@ -88,57 +97,62 @@ class _MusicPlayerState extends State<MusicPlayer> {
             (BuildContext context, AudioPlayer player, Widget child) {
           return WillPopScope(
             onWillPop: () => _willPop(player),
-            child: Scaffold(
-              backgroundColor: Colors.black,
-              body: AudioPlaylistComponent(
-                playlistBuilder:
-                    (BuildContext context, Playlist playlist, Widget child) {
-                  return DecoratedBox(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        colorFilter:
-                            ColorFilter.mode(Colors.black45, BlendMode.darken),
-                        fit: BoxFit.cover,
-                        image: CachedNetworkImageProvider(
-                          widget.globals.serverPath +
-                              (trackList[playlist.activeIndex].artistPicture ??
-                                  ""),
-                        ),
-                      ),
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        _buildAppBar(player),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Text(
-                                formatDuration(player.position),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              AudioRadialSeekBar(
-                                picture: widget.globals.serverPath +
-                                    (trackList[playlist.activeIndex].picture ??
-                                        ""),
-                              ),
-                              Text(
-                                formatDuration(player.audioLength),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 10.0),
+              child: Scaffold(
+                backgroundColor: Colors.black,
+                body: AudioPlaylistComponent(
+                  playlistBuilder:
+                      (BuildContext context, Playlist playlist, Widget child) {
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          colorFilter: ColorFilter.mode(
+                              Colors.black45, BlendMode.darken),
+                          fit: BoxFit.cover,
+                          image: CachedNetworkImageProvider(
+                            widget.globals.serverPath +
+                                (trackList[playlist.activeIndex]
+                                        .artistPicture ??
+                                    ""),
                           ),
                         ),
-                        BottomControls(
-                          audioPlayer: player,
-                          songTitle: trackList[playlist.activeIndex].name,
-                          artistName:
-                              trackList[playlist.activeIndex].artistName,
-                        )
-                      ],
-                    ),
-                  );
-                },
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          _buildAppBar(player),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(
+                                  formatDuration(player.position),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                AudioRadialSeekBar(
+                                  picture: widget.globals.serverPath +
+                                      (trackList[playlist.activeIndex]
+                                              .picture ??
+                                          ""),
+                                ),
+                                Text(
+                                  formatDuration(player.audioLength),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                          BottomControls(
+                            audioPlayer: player,
+                            songTitle: trackList[playlist.activeIndex].name,
+                            artistName:
+                                trackList[playlist.activeIndex].artistName,
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           );

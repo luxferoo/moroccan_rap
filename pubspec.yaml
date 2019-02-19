@@ -25,6 +25,7 @@ dependencies:
   rxdart: ^0.20.0
   cached_network_image: ^0.5.1
   fluttery_audio: 0.0.3
+  firebase_admob: ^0.8.0+2
 
 dev_dependencies:
   flutter_test:
