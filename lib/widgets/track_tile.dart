@@ -27,7 +27,7 @@ class TrackTile extends StatelessWidget {
         ),
         title: Text(track.name ?? ""),
         subtitle: Text(
-          track.albumName ?? "unknown album",
+          track.albumName ?? "",
           style: TextStyle(color: Colors.grey),
         ),
         onTap: onTap,
