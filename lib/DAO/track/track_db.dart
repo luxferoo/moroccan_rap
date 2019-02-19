@@ -54,4 +54,10 @@ class TrackDb implements TrackSource, TrackCache{
     return null;
   }
 
+  @override
+  Future<List<Track>> fetchCarouselTracks() {
+    // TODO: implement fetchCarouselTracks
+    return null;
+  }
+
 }

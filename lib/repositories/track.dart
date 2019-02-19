@@ -64,6 +64,10 @@ class Track {
     return trackApi.fetchRecentTracks();
   }
 
+  Future<List<TrackModel.Track>> fetchCarouselTracks() {
+    return trackApi.fetchCarouselTracks();
+  }
+
   clearCache() async {
     for (var cache in caches) {
       await cache.clear();

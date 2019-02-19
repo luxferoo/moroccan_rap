@@ -41,28 +41,22 @@ class _ArtistState extends State<ArtistDetail> {
     final trackBloc = TrackProvider.of(context);
 
     return Scaffold(
-        backgroundColor: Colors.black,
-        body: FutureBuilder(
-          future: TrackRepo.Track().fetchTracksByArtistId(widget.artistId),
-          builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
-            if (!snapshot.hasData) {
-              return CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  _buildSliverAppBar(artistBloc),
-                ],
-              );
-            } else {
-              return CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  _buildSliverAppBar(artistBloc),
-                  _buildTracksList(snapshot.data, trackBloc),
-                ],
-              );
-            }
-          },
-        ));
+      backgroundColor: Colors.black,
+      body: FutureBuilder(
+        future: TrackRepo.Track().fetchTracksByArtistId(widget.artistId),
+        builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
+          List<Widget> slivers = [_buildSliverAppBar(artistBloc)];
+
+          if (snapshot.hasData) {
+            slivers.add(_buildTracksList(snapshot.data, trackBloc));
+          }
+          return CustomScrollView(
+            controller: _scrollController,
+            slivers: slivers,
+          );
+        },
+      ),
+    );
   }
 
   SliverPersistentHeader makeHeader(String headerText) {

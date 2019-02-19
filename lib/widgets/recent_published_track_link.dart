@@ -19,39 +19,43 @@ class RecentPublishedTrackLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black87,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          CachedNetworkImage(
-            errorWidget: Image(
-              image: AssetImage("assets/img/picture-placeholder.png"),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onPressed,
+      child: Container(
+        color: Colors.black87,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CachedNetworkImage(
+              errorWidget: Image(
+                image: AssetImage("assets/img/picture-placeholder.png"),
+              ),
+              height: 120,
+              width: double.maxFinite,
+              fit: BoxFit.cover,
+              imageUrl: globals.serverPath + (picture ?? ""),
             ),
-            height: 120,
-            width: double.maxFinite,
-            fit: BoxFit.cover,
-            imageUrl: globals.serverPath + (picture ?? ""),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0),
-            child: Text(
-              cropText(capitalize(name ?? ""), 10),
-              style: TextStyle(fontSize: 15),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
+              child: Text(
+                cropText(capitalize(name ?? ""), 10),
+                style: TextStyle(fontSize: 15),
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0),
-            child: Text(
-              cropText(capitalize(artistName ?? ""), 12),
-              style: TextStyle(color: Colors.grey, fontSize: 13),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
+              child: Text(
+                cropText(capitalize(artistName ?? ""), 12),
+                style: TextStyle(color: Colors.grey, fontSize: 13),
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10, right: 30, left: 30),
-            child: PlayButton(onPressed: onPressed),
-          ),
-        ],
+            Container(
+              margin: EdgeInsets.only(top: 10, right: 30, left: 30),
+              child: PlayButton(onPressed: onPressed),
+            ),
+          ],
+        ),
       ),
     );
   }

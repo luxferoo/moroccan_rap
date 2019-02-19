@@ -45,4 +45,19 @@ class TrackApi implements TrackSource {
     }
     return null;
   }
+
+  @override
+  Future<List<Track>> fetchCarouselTracks() async {
+    final response = await _client.get(globals.tracksRoot + "/carousel");
+    if (response.statusCode == 200) {
+      final List<Track> tracks = jsonDecode(response.body)
+          .map((track) {
+            return Track.fromMap(track);
+          })
+          .toList()
+          .cast<Track>();
+      return tracks;
+    }
+    return null;
+  }
 }

@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import '../widgets/play_button.dart';
 
 class CarouselItem extends StatelessWidget {
-  final picture;
-  final trackName;
-  final trackId;
-  final artistName;
+  final String picture;
+  final String trackName;
+  final int trackId;
+  final String artistName;
+  final Function onPressed;
 
   CarouselItem({
     @required this.trackId,
     @required this.trackName,
     @required this.artistName,
     @required this.picture,
+    @required this.onPressed,
   })  : assert(trackId > 0),
         assert(trackName != null),
-        assert(trackName != null),
-        assert(trackName != null);
+        assert(trackId != null),
+        assert(artistName != null),
+        assert(onPressed != null);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +70,7 @@ class CarouselItem extends StatelessWidget {
                 ),
               ),
               PlayButton(
-                onPressed: () {},
+                onPressed: onPressed,
               )
             ],
           ),

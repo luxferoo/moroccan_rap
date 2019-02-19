@@ -6,4 +6,6 @@ abstract class TrackSource {
   Future<List<Track>> fetchTracksByArtistId(int id);
 
   Future<List<Track>> fetchRecentTracks();
+
+  Future<List<Track>> fetchCarouselTracks();
 }

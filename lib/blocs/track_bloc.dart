@@ -8,10 +8,12 @@ class TrackBloc {
   final _tracksByArtistFetcher = PublishSubject<int>();
   final _tracksByArtistOutput = ReplaySubject<Future<List<TrackModel.Track>>>();
   final _recentTracksPlaylist = PublishSubject<List<TrackModel.Track>>();
+  final _carouselPlaylist = PublishSubject<List<TrackModel.Track>>();
   final _artistPlaylist = PublishSubject<List<TrackModel.Track>>();
 
   Observable<List<TrackModel.Track>> get recentTracksPlaylist => _recentTracksPlaylist.stream;
   Observable<List<TrackModel.Track>> get artistPlaylist => _artistPlaylist.stream;
+  Observable<List<TrackModel.Track>> get carouselPlaylist => _carouselPlaylist.stream;
 
   Observable<Future<List<TrackModel.Track>>> get tracksByArtists =>
       _tracksByArtistOutput.stream;
@@ -43,11 +45,17 @@ class TrackBloc {
     _artistPlaylist.sink.add(tracks);
   }
 
+  fetchCarouselPlaylist() async {
+    final tracks = await _repository.fetchCarouselTracks();
+    _carouselPlaylist.sink.add(tracks);
+  }
+
   dispose() {
     _tracksByArtistFetcher.close();
     _tracksByArtistOutput.close();
     _trackFetcher.close();
     _recentTracksPlaylist.close();
     _artistPlaylist.close();
+    _carouselPlaylist.close();
   }
 }

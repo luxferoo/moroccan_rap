@@ -49,6 +49,7 @@ MaterialPageRoute routes(RouteSettings setting) {
       if (setting.name == "/home") {
         trackBloc.fetchRecentTracks();
         artistBloc.fetchArtistsIds();
+        trackBloc.fetchCarouselPlaylist();
         return Home();
       }
 
@@ -78,6 +79,17 @@ MaterialPageRoute routes(RouteSettings setting) {
         return MusicPlayer(
           startAt: index,
           playlistStreamSource: trackBloc.artistPlaylist,
+        );
+      }
+
+      final carouselPlaylistPlayerRegex =
+          RegExp(r"/carousel-playlist-player/[0-9]*$");
+      if (carouselPlaylistPlayerRegex.hasMatch(setting.name)) {
+        final index = int.parse(
+            setting.name.replaceFirst('/carousel-playlist-player/', ''));
+        return MusicPlayer(
+          startAt: index,
+          playlistStreamSource: trackBloc.carouselPlaylist,
         );
       }
     },
