@@ -27,4 +27,17 @@ class Track {
         picture = parsedJson["picture"],
         artistPicture = parsedJson["artistPicture"],
         track = parsedJson["track"];
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      "id": id,
+      "artistId": artistId,
+      "albumName": albumName,
+      "name": name,
+      "artistName": artistName,
+      "picture": picture,
+      "artistPicture": artistPicture,
+      "track": track,
+    };
+  }
 }

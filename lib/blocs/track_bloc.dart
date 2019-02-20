@@ -9,7 +9,7 @@ class TrackBloc {
   final _tracksByArtistOutput = ReplaySubject<Future<List<TrackModel.Track>>>();
   final _recentTracksPlaylist = PublishSubject<List<TrackModel.Track>>();
   final _carouselPlaylist = PublishSubject<List<TrackModel.Track>>();
-  final _artistPlaylist = PublishSubject<List<TrackModel.Track>>();
+  final _artistPlaylist = BehaviorSubject<List<TrackModel.Track>>();
 
   Observable<List<TrackModel.Track>> get recentTracksPlaylist => _recentTracksPlaylist.stream;
   Observable<List<TrackModel.Track>> get artistPlaylist => _artistPlaylist.stream;

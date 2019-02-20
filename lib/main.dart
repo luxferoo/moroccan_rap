@@ -67,7 +67,6 @@ MaterialPageRoute routes(RouteSettings setting) {
           }
 
           List<String> splitted = setting.name.split("/");
-          print(splitted);
           if (splitted[1] == "player") {
             String subRoute = splitted[2];
             int index = int.parse(splitted[3]);

@@ -146,9 +146,13 @@ class _ArtistState extends State<ArtistDetail> {
         silverAppBarTextColor = Colors.black;
       }
     }
-    return SliverAppBar(
+    return new SliverAppBar(
       backgroundColor: Colors.white,
       iconTheme: IconThemeData(color: silverAppBarTextColor),
+      leading: new IconButton(
+        icon: new Icon(Icons.arrow_back_ios),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
       title: StreamBuilder(
         stream: artistBloc.artist,
         builder: (BuildContext context,

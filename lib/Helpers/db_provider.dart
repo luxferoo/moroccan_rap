@@ -14,7 +14,7 @@ class _DbProvider {
     final path = join(documentsDirectory.path, "moroccan_rap.db");
     db = await openDatabase(
       path,
-      version: 1,
+      version: 3,
       onCreate: (Database newDb, int version) {
         newDb.execute('''CREATE TABLE $TABLE_ARTIST
         (
@@ -28,12 +28,12 @@ class _DbProvider {
         (
           id INTEGER PRIMARY KEY,
           artistId INTEGER,
-          album TEXT,
+          albumName TEXT,
           name TEXT,
           artistName TEXT,
           picture TEXT,
           artistPicture TEXT,
-          link TEXT
+          track TEXT
         )
         ''');
       },
