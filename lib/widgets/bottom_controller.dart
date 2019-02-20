@@ -31,7 +31,7 @@ class BottomControlsState extends State<BottomControls> {
           Colors.black,
         ],
       )),
-      padding: EdgeInsets.symmetric(vertical: 50.0),
+      padding: EdgeInsets.symmetric(vertical: 20.0),
       child: Column(
         children: <Widget>[
           RichText(
@@ -122,11 +122,12 @@ class BottomControlsState extends State<BottomControls> {
           icon: Icons.play_arrow, onPressed: player.play);
     } else {
       return Padding(
-          padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 1.0),
-          child: Text(
-            "Buffering...",
-            style: TextStyle(color: Colors.white, fontSize: 16.0),
-          ));
+        padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 1.0),
+        child: Text(
+          "Buffering...",
+          style: TextStyle(color: Colors.white, fontSize: 16.0),
+        ),
+      );
     }
   }
 }

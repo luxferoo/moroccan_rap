@@ -24,7 +24,6 @@ class Home extends StatelessWidget {
     myBanner
       ..load()
       ..show(
-        //anchorOffset: 60.0,
         anchorType: AnchorType.bottom,
       );
 
@@ -32,7 +31,7 @@ class Home extends StatelessWidget {
       backgroundColor: Colors.black,
       body: RefreshIndicator(
         child: Padding(
-          padding: EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0, bottom: 50.0),
+          padding: EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0),
           child: CustomScrollView(
             slivers: <Widget>[
               _buildSliverAppBar(trackBloc),

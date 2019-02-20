@@ -39,56 +39,61 @@ class App extends StatelessWidget {
 MaterialPageRoute routes(RouteSettings setting) {
   return MaterialPageRoute(
     builder: (BuildContext context) {
-      final ArtistBloc artistBloc = ArtistProvider.of(context);
-      final TrackBloc trackBloc = TrackProvider.of(context);
+      return Padding(
+        padding: EdgeInsets.only(bottom: 50.0),
+        child: ((){
+          final ArtistBloc artistBloc = ArtistProvider.of(context);
+          final TrackBloc trackBloc = TrackProvider.of(context);
 
-      if (setting.name == "/") {
-        return SplashScreen();
-      }
+          if (setting.name == "/") {
+            return SplashScreen();
+          }
 
-      if (setting.name == "/home") {
-        trackBloc.fetchRecentTracks();
-        artistBloc.fetchArtistsIds();
-        trackBloc.fetchCarouselPlaylist();
-        return Home();
-      }
+          if (setting.name == "/home") {
+            trackBloc.fetchRecentTracks();
+            artistBloc.fetchArtistsIds();
+            trackBloc.fetchCarouselPlaylist();
+            return Home();
+          }
 
-      final artistDetailsRegex = RegExp(r"/artist_details/[0-9]*$");
-      if (artistDetailsRegex.hasMatch(setting.name)) {
-        final artistId =
+          final artistDetailsRegex = RegExp(r"/artist_details/[0-9]*$");
+          if (artistDetailsRegex.hasMatch(setting.name)) {
+            final artistId =
             int.parse(setting.name.replaceFirst('/artist_details/', ''));
-        artistBloc.fetchArtist(artistId);
-        return ArtistDetail(
-          artistId: artistId,
-        );
-      }
+            artistBloc.fetchArtist(artistId);
+            return ArtistDetail(
+              artistId: artistId,
+            );
+          }
 
-      List<String> splitted = setting.name.split("/");
-      print(splitted);
-      if (splitted[1] == "player") {
-        String subRoute = splitted[2];
-        int index = int.parse(splitted[3]);
-        switch (subRoute) {
-          case "recent":
-            return MusicPlayer(
-              startAt: index,
-              playlistStreamSource: trackBloc.recentTracksPlaylist,
-            );
-            break;
-          case "artist":
-            return MusicPlayer(
-              startAt: index,
-              playlistStreamSource: trackBloc.artistPlaylist,
-            );
-            break;
-          case "carousel":
-            return MusicPlayer(
-              startAt: index,
-              playlistStreamSource: trackBloc.carouselPlaylist,
-            );
-            break;
-        }
-      }
+          List<String> splitted = setting.name.split("/");
+          print(splitted);
+          if (splitted[1] == "player") {
+            String subRoute = splitted[2];
+            int index = int.parse(splitted[3]);
+            switch (subRoute) {
+              case "recent":
+                return MusicPlayer(
+                  startAt: index,
+                  playlistStreamSource: trackBloc.recentTracksPlaylist,
+                );
+                break;
+              case "artist":
+                return MusicPlayer(
+                  startAt: index,
+                  playlistStreamSource: trackBloc.artistPlaylist,
+                );
+                break;
+              case "carousel":
+                return MusicPlayer(
+                  startAt: index,
+                  playlistStreamSource: trackBloc.carouselPlaylist,
+                );
+                break;
+            }
+          }
+        })(),
+      );
     },
   );
 }

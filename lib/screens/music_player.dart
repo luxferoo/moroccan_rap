@@ -97,62 +97,57 @@ class _MusicPlayerState extends State<MusicPlayer> {
             (BuildContext context, AudioPlayer player, Widget child) {
           return WillPopScope(
             onWillPop: () => _willPop(player),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Scaffold(
-                backgroundColor: Colors.black,
-                body: AudioPlaylistComponent(
-                  playlistBuilder:
-                      (BuildContext context, Playlist playlist, Widget child) {
-                    return DecoratedBox(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          colorFilter: ColorFilter.mode(
-                              Colors.black45, BlendMode.darken),
-                          fit: BoxFit.cover,
-                          image: CachedNetworkImageProvider(
-                            widget.globals.serverPath +
-                                (trackList[playlist.activeIndex]
-                                        .artistPicture ??
-                                    ""),
-                          ),
+            child: Scaffold(
+              backgroundColor: Colors.black,
+              body: AudioPlaylistComponent(
+                playlistBuilder:
+                    (BuildContext context, Playlist playlist, Widget child) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        colorFilter:
+                            ColorFilter.mode(Colors.black45, BlendMode.darken),
+                        fit: BoxFit.cover,
+                        image: CachedNetworkImageProvider(
+                          widget.globals.serverPath +
+                              (trackList[playlist.activeIndex].artistPicture ??
+                                  ""),
                         ),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          _buildAppBar(player),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Text(
-                                  formatDuration(player.position),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                AudioRadialSeekBar(
-                                  picture: widget.globals.serverPath +
-                                      (trackList[playlist.activeIndex]
-                                              .picture ??
-                                          ""),
-                                ),
-                                Text(
-                                  formatDuration(player.audioLength),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        _buildAppBar(player),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Text(
+                                formatDuration(player.position),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              AudioRadialSeekBar(
+                                picture: widget.globals.serverPath +
+                                    (trackList[playlist.activeIndex].picture ??
+                                        ""),
+                              ),
+                              Text(
+                                formatDuration(player.audioLength),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
                           ),
-                          BottomControls(
-                            audioPlayer: player,
-                            songTitle: trackList[playlist.activeIndex].name,
-                            artistName:
-                                trackList[playlist.activeIndex].artistName,
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                        ),
+                        BottomControls(
+                          audioPlayer: player,
+                          songTitle: trackList[playlist.activeIndex].name,
+                          artistName:
+                              trackList[playlist.activeIndex].artistName,
+                        )
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           );
