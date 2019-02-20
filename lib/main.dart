@@ -40,7 +40,7 @@ MaterialPageRoute routes(RouteSettings setting) {
   return MaterialPageRoute(
     builder: (BuildContext context) {
       return Padding(
-        padding: EdgeInsets.only(bottom: 50.0),
+        padding: EdgeInsets.only(bottom: 60.0),
         child: ((){
           final ArtistBloc artistBloc = ArtistProvider.of(context);
           final TrackBloc trackBloc = TrackProvider.of(context);
