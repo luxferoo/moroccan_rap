@@ -45,10 +45,18 @@ class _ArtistState extends State<ArtistDetail> {
       body: FutureBuilder(
         future: TrackRepo.Track().fetchTracksByArtistId(widget.artistId),
         builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
-          List<Widget> slivers = [_buildSliverAppBar(artistBloc)];
+          List<Widget> slivers = [
+            _buildSliverAppBar(artistBloc),
+            new SliverToBoxAdapter(
+              child: new Center(
+                heightFactor: 6.5,
+                child: new CircularProgressIndicator(),
+              ),
+            )
+          ];
 
           if (snapshot.hasData) {
-            slivers.add(_buildTracksList(snapshot.data, trackBloc));
+            slivers[1] = _buildTracksList(snapshot.data, trackBloc);
           }
           return CustomScrollView(
             controller: _scrollController,
@@ -179,8 +187,7 @@ class _ArtistState extends State<ArtistDetail> {
                 track: tracks[index],
                 onTap: () {
                   bloc.fetchArtistPlaylist(widget.artistId);
-                  Navigator.of(context)
-                      .pushNamed('/player/artist/$index');
+                  Navigator.of(context).pushNamed('/player/artist/$index');
                 },
               ),
               Divider(

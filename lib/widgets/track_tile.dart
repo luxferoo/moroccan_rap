@@ -38,7 +38,7 @@ class TrackTile extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
-          track.albumName ?? "sdfsd",
+          track.albumName ?? "",
           style: TextStyle(
             color: Colors.grey,
             fontWeight: FontWeight.bold,
