@@ -25,12 +25,12 @@ class MusicPlayer extends StatefulWidget {
 class _MusicPlayerState extends State<MusicPlayer> {
   @override
   Widget build(BuildContext context) {
-    /* myInterstitial
+    myInterstitial
       ..load()
       ..show(
         anchorType: AnchorType.bottom,
         anchorOffset: 0.0,
-      );*/
+      );
     return StreamBuilder(
       stream: widget.playlistStreamSource,
       builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
