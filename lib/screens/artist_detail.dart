@@ -9,30 +9,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../repositories/track.dart' as TrackRepo;
 import '../Helpers/globals.dart';
 
-class ArtistDetail extends StatefulWidget {
-  final int artistId;
-  ArtistDetail({this.artistId});
-
-  @override
-  State<StatefulWidget> createState() => _ArtistState();
-}
-
-class _ArtistState extends State<ArtistDetail> {
+class ArtistDetail extends StatelessWidget {
   final Globals globals = Globals();
-  final double _expandedHeight = 400.0;
-  final _scrollController = new ScrollController();
+  final int artistId;
 
-  @override
-  void initState() {
-    _scrollController.addListener(() => setState(() {}));
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
+  ArtistDetail({this.artistId});
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +23,10 @@ class _ArtistState extends State<ArtistDetail> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: FutureBuilder(
-        future: TrackRepo.Track().fetchTracksByArtistId(widget.artistId),
+        future: TrackRepo.Track().fetchTracksByArtistId(artistId),
         builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
           List<Widget> slivers = [
-            _buildSliverAppBar(artistBloc),
+            _buildSliverAppBar(context, artistBloc),
             new SliverToBoxAdapter(
               child: new Center(
                 heightFactor: 6.5,
@@ -58,7 +39,6 @@ class _ArtistState extends State<ArtistDetail> {
             slivers[1] = _buildTracksList(snapshot.data, trackBloc);
           }
           return CustomScrollView(
-            controller: _scrollController,
             slivers: slivers,
           );
         },
@@ -85,17 +65,20 @@ class _ArtistState extends State<ArtistDetail> {
     );
   }
 
-  Widget _buildFlexibleSpaceBar(ArtistBloc bloc) {
+  Widget _buildFlexibleSpaceBar(BuildContext context, ArtistBloc bloc) {
     return FlexibleSpaceBar(
       background: Hero(
-        tag: "${widget.artistId}-picture",
+        tag: "$artistId-picture",
         child: DecoratedBox(
           position: DecorationPosition.foreground,
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
               end: Alignment(1.0, 0.0),
               begin: Alignment(0.0, -2),
-              colors: <Color>[Colors.black, Colors.transparent],
+              colors: <Color>[
+                Theme.of(context).primaryColor,
+                Colors.transparent
+              ],
             ),
           ),
           child: StreamBuilder(
@@ -106,7 +89,7 @@ class _ArtistState extends State<ArtistDetail> {
                 return Container(color: Colors.black);
               }
               return FutureBuilder(
-                future: snapshot.data[widget.artistId],
+                future: snapshot.data[artistId],
                 builder: (BuildContext context,
                     AsyncSnapshot<Artist> artistSnapshot) {
                   if (!artistSnapshot.hasData) {
@@ -132,23 +115,10 @@ class _ArtistState extends State<ArtistDetail> {
     );
   }
 
-  Widget _buildSliverAppBar(ArtistBloc artistBloc) {
-    Color silverAppBarTextColor = Colors.white;
-    final defaultTopMargin = _expandedHeight - 20.0;
-    final startScale = 96.0;
-    final endScale = startScale / 2;
-
-    if (_scrollController.hasClients) {
-      final offset = _scrollController.offset;
-      if (offset < defaultTopMargin - endScale) {
-        silverAppBarTextColor = Colors.white;
-      } else {
-        silverAppBarTextColor = Colors.black;
-      }
-    }
+  Widget _buildSliverAppBar(BuildContext context, ArtistBloc artistBloc) {
     return new SliverAppBar(
-      backgroundColor: Colors.white,
-      iconTheme: IconThemeData(color: silverAppBarTextColor),
+      backgroundColor: Theme.of(context).primaryColor,
+      iconTheme: IconThemeData(color: Colors.white),
       leading: new IconButton(
         icon: new Icon(Icons.arrow_back_ios),
         onPressed: () => Navigator.of(context).pop(),
@@ -161,23 +131,23 @@ class _ArtistState extends State<ArtistDetail> {
             return SizedBox();
           }
           return FutureBuilder(
-            future: snapshot.data[widget.artistId],
+            future: snapshot.data[artistId],
             builder:
                 (BuildContext context, AsyncSnapshot<Artist> artistSnapshot) {
               if (!artistSnapshot.hasData) {
                 return SizedBox();
               }
-              return Text(
+              return new Text(
                 artistSnapshot.data.name ?? "",
-                style: TextStyle(color: silverAppBarTextColor, fontSize: 20.0),
+                style: TextStyle(color: Colors.white, fontSize: 20.0),
               );
             },
           );
         },
       ),
-      expandedHeight: _expandedHeight,
+      expandedHeight: 400.0,
       pinned: true,
-      flexibleSpace: _buildFlexibleSpaceBar(artistBloc),
+      flexibleSpace: _buildFlexibleSpaceBar(context, artistBloc),
     );
   }
 
@@ -190,7 +160,7 @@ class _ArtistState extends State<ArtistDetail> {
               TrackTile(
                 track: tracks[index],
                 onTap: () {
-                  bloc.fetchArtistPlaylist(widget.artistId);
+                  bloc.fetchArtistPlaylist(artistId);
                   Navigator.of(context).pushNamed('/player/artist/$index');
                 },
               ),
