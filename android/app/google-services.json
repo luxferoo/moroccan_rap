@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "196054472144",
+    "firebase_url": "https://jinzo-31b9a.firebaseio.com",
+    "project_id": "jinzo-31b9a",
+    "storage_bucket": "jinzo-31b9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196054472144:android:672aab2217e07c30",
+        "android_client_info": {
+          "package_name": "com.luxfero.moroccanrap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196054472144-l2j2fjjab6g55dr0j7bekd8u8buch788.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdy0KjOY8KfoOt4ubOoIokfGWkRculzDw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
