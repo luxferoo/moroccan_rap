@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/play_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../Helpers/globals.dart';
 
 class CarouselItem extends StatelessWidget {
   final String picture;
@@ -8,6 +9,7 @@ class CarouselItem extends StatelessWidget {
   final int trackId;
   final String artistName;
   final Function onPressed;
+  final globals = new Globals();
 
   CarouselItem({
     @required this.trackId,
@@ -39,6 +41,7 @@ class CarouselItem extends StatelessWidget {
             ),
           ),
           child: new CachedNetworkImage(
+            httpHeaders: {"app_key": globals.appKey},
             imageUrl: picture,
             width: double.infinity,
             height: double.infinity,

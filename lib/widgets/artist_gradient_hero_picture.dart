@@ -23,6 +23,7 @@ class ArtistGradientHeroPicture extends StatelessWidget {
           ),
         ),
         child: CachedNetworkImage(
+          httpHeaders: {"app_key": globals.appKey},
           imageUrl: globals.serverPath + (artist.picture ?? ""),
           fit: BoxFit.cover,
           errorWidget:

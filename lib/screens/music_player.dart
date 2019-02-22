@@ -12,7 +12,6 @@ import '../Helpers/globals.dart';
 
 class MusicPlayer extends StatefulWidget {
   final int startAt;
-  final Globals globals = Globals();
   final Observable<List<Track>> playlistStreamSource;
 
   MusicPlayer({this.startAt = 0, @required this.playlistStreamSource})
@@ -23,6 +22,8 @@ class MusicPlayer extends StatefulWidget {
 }
 
 class _MusicPlayerState extends State<MusicPlayer> {
+  final Globals globals = Globals();
+
   @override
   Widget build(BuildContext context) {
     myInterstitial
@@ -84,7 +85,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
     return AudioPlaylist(
       startPlayingFromIndex: widget.startAt,
       playlist: trackList.map((Track track) {
-        return widget.globals.trackStreamPath + track.track;
+        return globals.trackStreamPath + track.track;
       }).toList(),
       child: AudioComponent(
         updateMe: [
@@ -108,10 +109,11 @@ class _MusicPlayerState extends State<MusicPlayer> {
                             ColorFilter.mode(Colors.black45, BlendMode.darken),
                         fit: BoxFit.cover,
                         image: CachedNetworkImageProvider(
-                          widget.globals.serverPath +
-                              (trackList[playlist.activeIndex].artistPicture ??
-                                  ""),
-                        ),
+                            globals.serverPath +
+                                (trackList[playlist.activeIndex]
+                                        .artistPicture ??
+                                    ""),
+                            headers: {"app_key": globals.appKey}),
                       ),
                     ),
                     child: Column(
@@ -126,7 +128,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               AudioRadialSeekBar(
-                                picture: widget.globals.serverPath +
+                                picture: globals.serverPath +
                                     (trackList[playlist.activeIndex].picture ??
                                         ""),
                               ),

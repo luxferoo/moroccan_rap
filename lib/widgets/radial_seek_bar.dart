@@ -1,9 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'circle_clipper.dart';
 import 'radial_progress_bar.dart';
 import 'radial_drag_gesture_detector.dart';
+import '../Helpers/globals.dart';
 
 class RadialSeekBar extends StatefulWidget {
   final double seekPercent;
@@ -25,6 +25,7 @@ class RadialSeekBar extends StatefulWidget {
 }
 
 class _RadialSeekBarState extends State<RadialSeekBar> {
+  final Globals globals = new Globals();
   double _currentDragPercent;
   double _progress = 0.0;
   PolarCoord _startDragCoord;
@@ -93,6 +94,7 @@ class _RadialSeekBarState extends State<RadialSeekBar> {
               child: ClipOval(
                 child: Image.network(
                   widget.picture,
+                  headers: {"app_key": globals.appKey},
                   fit: BoxFit.cover,
                 ),
                 clipper: CircleClipper(),

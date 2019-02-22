@@ -28,6 +28,7 @@ class RecentPublishedTrackLink extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             CachedNetworkImage(
+              httpHeaders: {"app_key": globals.appKey},
               errorWidget: Image(
                 image: AssetImage("assets/img/picture-placeholder.png"),
               ),

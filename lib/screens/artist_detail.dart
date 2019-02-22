@@ -11,8 +11,6 @@ import '../Helpers/globals.dart';
 
 class ArtistDetail extends StatefulWidget {
   final int artistId;
-  final Globals globals = Globals();
-
   ArtistDetail({this.artistId});
 
   @override
@@ -20,6 +18,7 @@ class ArtistDetail extends StatefulWidget {
 }
 
 class _ArtistState extends State<ArtistDetail> {
+  final Globals globals = Globals();
   final double _expandedHeight = 400.0;
   final _scrollController = new ScrollController();
 
@@ -114,10 +113,11 @@ class _ArtistState extends State<ArtistDetail> {
                     return Container(color: Colors.black);
                   }
                   return CachedNetworkImage(
+                    httpHeaders: {"app_key": globals.appKey},
                     errorWidget: Image(
                       image: AssetImage("assets/img/picture-placeholder.png"),
                     ),
-                    imageUrl: widget.globals.serverPath +
+                    imageUrl: globals.serverPath +
                         (artistSnapshot.data.picture ?? ""),
                     fit: BoxFit.cover,
                     height: double.infinity,

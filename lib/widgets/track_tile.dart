@@ -20,14 +20,17 @@ class TrackTile extends StatelessWidget {
       ),
       child: ListTile(
         leading: CachedNetworkImage(
+          httpHeaders: {"app_key": globals.appKey},
           errorWidget: Image(
             height: 40,
             width: 40,
             image: AssetImage("assets/img/musique_icon.png"),
           ),
-          placeholder: Image.asset("assets/img/musique_icon.png",
+          placeholder: Image.asset(
+            "assets/img/musique_icon.png",
             height: 40,
-            width: 40,),
+            width: 40,
+          ),
           height: 40,
           width: 40,
           fit: BoxFit.cover,

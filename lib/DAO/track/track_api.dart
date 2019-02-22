@@ -7,14 +7,11 @@ import '../../Helpers/globals.dart';
 class TrackApi implements TrackSource {
   final Globals globals = Globals();
   final _client = Client();
-  final Map<String, String> headers = {
-    "app_key": "oF52iOAQNd63Lg9GP5zQkmntmwB1Nf6m"
-  };
 
   @override
   Future<List<Track>> fetchTracksByArtistId(int id) async {
     final response = await _client.get('${globals.artistsRoot}/$id/tracks',
-        headers: headers);
+        headers: {"app_key": globals.appKey});
     if (response.statusCode == 200) {
       final List<Track> tracks = jsonDecode(response.body)
           .map((track) {
@@ -29,8 +26,8 @@ class TrackApi implements TrackSource {
 
   @override
   Future<Track> fetchTrack(int id) async {
-    final response =
-        await _client.get('${globals.tracksRoot}/$id', headers: headers);
+    final response = await _client
+        .get('${globals.tracksRoot}/$id', headers: {"app_key": globals.appKey});
     if (response.statusCode == 200)
       return Track.fromMap(jsonDecode(response.body));
     return null;
@@ -38,7 +35,8 @@ class TrackApi implements TrackSource {
 
   @override
   Future<List<Track>> fetchRecentTracks() async {
-    final response = await _client.get(globals.tracksRoot, headers: headers);
+    final response = await _client
+        .get(globals.tracksRoot, headers: {"app_key": globals.appKey});
     if (response.statusCode == 200) {
       final List<Track> tracks = jsonDecode(response.body)
           .map((track) {
@@ -53,8 +51,8 @@ class TrackApi implements TrackSource {
 
   @override
   Future<List<Track>> fetchCarouselTracks() async {
-    final response =
-        await _client.get(globals.tracksRoot + "/carousel", headers: headers);
+    final response = await _client.get(globals.tracksRoot + "/carousel",
+        headers: {"app_key": globals.appKey});
     if (response.statusCode == 200) {
       final List<Track> tracks = jsonDecode(response.body)
           .map((track) {

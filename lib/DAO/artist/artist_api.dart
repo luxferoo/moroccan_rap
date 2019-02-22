@@ -7,21 +7,18 @@ import '../../Helpers/globals.dart';
 class ArtistApi implements ArtistSource {
   final Globals globals = Globals();
   final _client = Client();
-  final Map<String, String> headers = {
-    "app_key": "oF52iOAQNd63Lg9GP5zQkmntmwB1Nf6m"
-  };
 
   Future<List<int>> fetchIds() async {
-    final response =
-        await _client.get('${globals.artistsRoot}/ids', headers: headers);
+    final response = await _client.get('${globals.artistsRoot}/ids',
+        headers: {"app_key": globals.appKey});
     if (response.statusCode == 200)
       return jsonDecode(response.body).cast<int>();
     return null;
   }
 
   Future<Artist> fetchArtist(int id) async {
-    final response =
-        await _client.get('${globals.artistsRoot}/$id', headers: headers);
+    final response = await _client.get('${globals.artistsRoot}/$id',
+        headers: {"app_key": globals.appKey});
     if (response.statusCode == 200)
       return Artist.fromMap(jsonDecode(response.body));
     return null;
