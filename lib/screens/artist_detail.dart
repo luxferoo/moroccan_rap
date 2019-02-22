@@ -67,49 +67,46 @@ class ArtistDetail extends StatelessWidget {
 
   Widget _buildFlexibleSpaceBar(BuildContext context, ArtistBloc bloc) {
     return FlexibleSpaceBar(
-      background: Hero(
-        tag: "$artistId-picture",
-        child: DecoratedBox(
-          position: DecorationPosition.foreground,
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-              end: Alignment(1.0, 0.0),
-              begin: Alignment(0.0, -2),
-              colors: <Color>[
-                Theme.of(context).primaryColor,
-                Colors.transparent
-              ],
-            ),
+      background: DecoratedBox(
+        position: DecorationPosition.foreground,
+        decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+            end: Alignment(1.0, 0.0),
+            begin: Alignment(0.0, -2),
+            colors: <Color>[
+              Theme.of(context).primaryColor,
+              Colors.transparent
+            ],
           ),
-          child: StreamBuilder(
-            stream: bloc.artist,
-            builder: (BuildContext context,
-                AsyncSnapshot<Map<int, Future<Artist>>> snapshot) {
-              if (!snapshot.hasData) {
-                return Container(color: Colors.black);
-              }
-              return FutureBuilder(
-                future: snapshot.data[artistId],
-                builder: (BuildContext context,
-                    AsyncSnapshot<Artist> artistSnapshot) {
-                  if (!artistSnapshot.hasData) {
-                    return Container(color: Colors.black);
-                  }
-                  return CachedNetworkImage(
-                    httpHeaders: {"app_key": globals.appKey},
-                    errorWidget: Image(
-                      image: AssetImage("assets/img/picture-placeholder.png"),
-                    ),
-                    imageUrl: globals.serverPath +
-                        (artistSnapshot.data.picture ?? ""),
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
-                  );
-                },
-              );
-            },
-          ),
+        ),
+        child: StreamBuilder(
+          stream: bloc.artist,
+          builder: (BuildContext context,
+              AsyncSnapshot<Map<int, Future<Artist>>> snapshot) {
+            if (!snapshot.hasData) {
+              return Container(color: Colors.black);
+            }
+            return FutureBuilder(
+              future: snapshot.data[artistId],
+              builder: (BuildContext context,
+                  AsyncSnapshot<Artist> artistSnapshot) {
+                if (!artistSnapshot.hasData) {
+                  return Container(color: Colors.black);
+                }
+                return CachedNetworkImage(
+                  httpHeaders: {"app_key": globals.appKey},
+                  errorWidget: Image(
+                    image: AssetImage("assets/img/picture-placeholder.png"),
+                  ),
+                  imageUrl: globals.serverPath +
+                      (artistSnapshot.data.picture ?? ""),
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                  width: double.infinity,
+                );
+              },
+            );
+          },
         ),
       ),
     );
