@@ -1,17 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import '../Helpers/admob.dart';
+import '../Helpers/globals.dart';
 import 'package:flutter/material.dart';
 import '../Helpers/string.dart';
 import '../models/track.dart';
 import '../widgets/audio_radial_seek_bar.dart';
 import '../widgets/bottom_controller.dart';
-import '../Helpers/globals.dart';
 import '../blocs/audio_player_provider.dart';
 
 class MusicPlayer extends StatefulWidget {
   final List<Track> trackList;
   final int startAt;
+  final Globals globals = new Globals();
 
   MusicPlayer({
     @required this.trackList,
@@ -19,12 +20,16 @@ class MusicPlayer extends StatefulWidget {
   }) : assert(trackList != null);
 
   @override
-  _MusicPlayerState createState() => _MusicPlayerState();
+  _MusicPlayerState createState() => _MusicPlayerState(startAt: startAt);
 }
 
 class _MusicPlayerState extends State<MusicPlayer> {
   final Globals globals = Globals();
   int startAt;
+
+  _MusicPlayerState({this.startAt}) {
+    startAt = startAt;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
         anchorType: AnchorType.bottom,
         anchorOffset: 0.0,
       );
-    startAt = widget.startAt;
+
     AudioPlayerProvider.of(context)
         .startAudioService(track: widget.trackList[startAt]);
     return new Scaffold(
@@ -57,18 +62,38 @@ class _MusicPlayerState extends State<MusicPlayer> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text(
-                    formatDuration(Duration(seconds: 10)),
-                    style: TextStyle(color: Colors.white),
+                  new StreamBuilder(
+                    stream: AudioPlayerProvider.of(context).currentPosition,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      int currentPosition = 0;
+                      if (snapshot.hasData) {
+                        currentPosition = snapshot.data;
+                      }
+                      return new Text(
+                        currentPosition.toString(),
+                        style: TextStyle(color: Colors.white),
+                      );
+                    },
                   ),
                   AudioRadialSeekBar(
                     picture: globals.serverPath +
                         (widget.trackList[startAt].picture ?? ""),
                   ),
-                  Text(
-                    formatDuration(Duration(seconds: 10)),
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  new StreamBuilder(
+                    stream: AudioPlayerProvider.of(context).duration,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      int duration = 0;
+                      if (snapshot.hasData) {
+                        duration = snapshot.data;
+                      }
+                      return new Text(
+                        duration.toString(),
+                        style: TextStyle(color: Colors.white),
+                      );
+                    },
+                  )
                 ],
               ),
             ),

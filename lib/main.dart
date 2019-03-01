@@ -8,6 +8,7 @@ import 'blocs/track_provider.dart';
 import 'screens/artist_detail.dart';
 import 'screens/music_player.dart';
 import 'Helpers/db_provider.dart';
+import 'Helpers/globals.dart';
 import 'blocs/audio_player_provider.dart';
 import 'repositories/track.dart' as TrackRepos;
 
@@ -43,6 +44,7 @@ class App extends StatelessWidget {
 
 MaterialPageRoute routes(RouteSettings setting) {
   TrackRepos.Track trackRepos = new TrackRepos.Track();
+  final Globals globals = new Globals();
 
   return new MaterialPageRoute(
     builder: (BuildContext context) {
@@ -97,7 +99,7 @@ MaterialPageRoute routes(RouteSettings setting) {
 
             return new FutureBuilder(
               future: futureTrackList,
-              builder: (BuildContext context, snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
                 if (!snapshot.hasData) {
                   return new Scaffold(
                     backgroundColor: Colors.black,
@@ -119,11 +121,16 @@ MaterialPageRoute routes(RouteSettings setting) {
                       ),
                     ),
                   );
-                } else
+                } else {
+                  List<Track> trackList = snapshot.data.map((track) {
+                    track.track = globals.trackStreamPath + track.track;
+                    return track;
+                  }).toList();
                   return new MusicPlayer(
                     startAt: index,
-                    trackList: snapshot.data,
+                    trackList: trackList,
                   );
+                }
               },
             );
           }

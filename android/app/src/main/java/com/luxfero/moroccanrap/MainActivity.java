@@ -68,6 +68,8 @@ public class MainActivity extends FlutterActivity {
                             case "startAudioService":
                                 try {
                                     mService.setDataSource(((Map) call.arguments()).get("track").toString());
+                                    methodChannel.invokeMethod("onStateChanged", "playing");
+                                    //TODO implement callback
                                     startPlaybackListener();
                                     result.success(true);
                                 } catch (IOException e) {
@@ -106,10 +108,6 @@ public class MainActivity extends FlutterActivity {
     private void initAudioServiceListener() {
         mService.getMediaPlayer().setOnBufferingUpdateListener((mediaPlayer, percent) -> {
             methodChannel.invokeMethod("onBufferingUpdate", percent);
-            if (percent < 100)
-                methodChannel.invokeMethod("onStateChanged", "buffering");
-            if (percent == 100)
-                methodChannel.invokeMethod("onStateChanged", "playing");
         });
 
         mService.getMediaPlayer().setOnCompletionListener(mediaPlayer -> {
@@ -150,7 +148,7 @@ public class MainActivity extends FlutterActivity {
                 @Override
                 public void run() {
                     if (isPlaybackListener) {
-                        methodChannel.invokeMethod("currentPosition", mService.getCurrentPosition());
+                        methodChannel.invokeMethod("onCurrentPositionChanged", mService.getCurrentPosition());
                         methodChannel.invokeMethod("duration", mService.getDuration());
                         playbackListenerHandler.postDelayed(this, 500);
                     }

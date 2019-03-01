@@ -2,12 +2,10 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/track.dart';
-import '../Helpers/globals.dart';
 
 class AudioPlayerBloc {
   static MethodChannel platform =
       new MethodChannel('com.luxfero.moroccanrap/audio_service');
-  final globals = new Globals();
   final BehaviorSubject<String> _stateListener = BehaviorSubject();
   final PublishSubject<int> _currentPositionListener = PublishSubject();
   final PublishSubject<int> _bufferingListener = PublishSubject();
@@ -18,7 +16,7 @@ class AudioPlayerBloc {
     platform.setMethodCallHandler((MethodCall method) {
       String methodName = method.method;
       dynamic arguments = method.arguments;
-      if (methodName == "currentPosition") {
+      if (methodName == "onCurrentPositionChanged") {
         _currentPositionListener.add(arguments);
       }
 
@@ -46,9 +44,9 @@ class AudioPlayerBloc {
 
   Observable<int> get bufferingValue => _bufferingListener.stream;
 
-  Observable<int> get duration => _onSeekListener.stream;
+  Observable<int> get duration => _duration.stream;
 
-  Observable<int> get seekValue => _duration.stream;
+  Observable<int> get seekValue => _onSeekListener.stream;
 
   Future<void> ping() async {
     try {
@@ -57,9 +55,6 @@ class AudioPlayerBloc {
   }
 
   Future<void> startAudioService({@required Track track}) async {
-    if(track.track != null){
-      track.track = globals.trackStreamPath + track.track;
-    }
     try {
       await platform.invokeMethod("startAudioService", track.toMap());
     } on PlatformException catch (e) {}
