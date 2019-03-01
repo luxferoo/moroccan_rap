@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'models/track.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home.dart';
 import 'blocs/artist_provider.dart';
@@ -7,6 +8,8 @@ import 'blocs/track_provider.dart';
 import 'screens/artist_detail.dart';
 import 'screens/music_player.dart';
 import 'Helpers/db_provider.dart';
+import 'blocs/audio_player_provider.dart';
+import 'repositories/track.dart' as TrackRepos;
 
 void main() async {
   await dbProvider.init();
@@ -14,24 +17,24 @@ void main() async {
 }
 
 class App extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.black));
 
-    return TrackProvider(
-      child: ArtistProvider(
-        child: MaterialApp(
-          theme: ThemeData(
-              brightness: Brightness.dark,
-              fontFamily: "Montserrat Regular",
-              primaryColor: Colors.deepPurple,
-              accentColor: Colors.deepPurpleAccent),
-          debugShowCheckedModeBanner: false,
-          onGenerateRoute: routes,
+    return new TrackProvider(
+      child: new ArtistProvider(
+        child: new AudioPlayerProvider(
+          child: new MaterialApp(
+            theme: new ThemeData(
+                brightness: Brightness.dark,
+                fontFamily: "Montserrat Regular",
+                primaryColor: Colors.deepPurple,
+                accentColor: Colors.deepPurpleAccent),
+            debugShowCheckedModeBanner: false,
+            onGenerateRoute: routes,
+          ),
         ),
       ),
     );
@@ -39,16 +42,21 @@ class App extends StatelessWidget {
 }
 
 MaterialPageRoute routes(RouteSettings setting) {
-  return MaterialPageRoute(
+  TrackRepos.Track trackRepos = new TrackRepos.Track();
+
+  return new MaterialPageRoute(
     builder: (BuildContext context) {
-      return Padding(
-        padding: EdgeInsets.only(bottom: 60.0),
-        child: ((){
+      return new Padding(
+        padding: new EdgeInsets.only(bottom: 60.0),
+        child: (() {
           final ArtistBloc artistBloc = ArtistProvider.of(context);
           final TrackBloc trackBloc = TrackProvider.of(context);
+          final AudioPlayerBloc audioPlayerBloc =
+              AudioPlayerProvider.of(context);
+          audioPlayerBloc.ping();
 
           if (setting.name == "/") {
-            return SplashScreen();
+            return new SplashScreen();
           }
 
           if (setting.name == "/home") {
@@ -61,7 +69,7 @@ MaterialPageRoute routes(RouteSettings setting) {
           final artistDetailsRegex = RegExp(r"/artist_details/[0-9]*$");
           if (artistDetailsRegex.hasMatch(setting.name)) {
             final artistId =
-            int.parse(setting.name.replaceFirst('/artist_details/', ''));
+                int.parse(setting.name.replaceFirst('/artist_details/', ''));
             artistBloc.fetchArtist(artistId);
             return ArtistDetail(
               artistId: artistId,
@@ -70,28 +78,54 @@ MaterialPageRoute routes(RouteSettings setting) {
 
           List<String> splitted = setting.name.split("/");
           if (splitted[1] == "player") {
+            Future<List<Track>> futureTrackList;
+
             String subRoute = splitted[2];
             int index = int.parse(splitted[3]);
             switch (subRoute) {
               case "recent":
-                return MusicPlayer(
-                  startAt: index,
-                  playlistStreamSource: trackBloc.recentTracksPlaylist,
-                );
+                futureTrackList = trackRepos.fetchRecentTracks();
                 break;
               case "artist":
-                return MusicPlayer(
-                  startAt: index,
-                  playlistStreamSource: trackBloc.artistPlaylist,
-                );
+                futureTrackList =
+                    trackRepos.fetchTracksByArtistId(int.parse(splitted[4]));
                 break;
               case "carousel":
-                return MusicPlayer(
-                  startAt: index,
-                  playlistStreamSource: trackBloc.carouselPlaylist,
-                );
+                futureTrackList = trackRepos.fetchCarouselTracks();
                 break;
             }
+
+            return new FutureBuilder(
+              future: futureTrackList,
+              builder: (BuildContext context, snapshot) {
+                if (!snapshot.hasData) {
+                  return new Scaffold(
+                    backgroundColor: Colors.black,
+                    body: Container(
+                      color: Colors.black,
+                      width: double.maxFinite,
+                      height: double.maxFinite,
+                      child: AppBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0.0,
+                        leading: IconButton(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            color: Colors.white,
+                            icon: Icon(Icons.arrow_back_ios),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }),
+                      ),
+                    ),
+                  );
+                } else
+                  return new MusicPlayer(
+                    startAt: index,
+                    trackList: snapshot.data,
+                  );
+              },
+            );
           }
         })(),
       );

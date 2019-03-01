@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:fluttery_audio/fluttery_audio.dart';
 import 'circle_clipper.dart';
+import '../blocs/audio_player_provider.dart';
 
 class BottomControls extends StatefulWidget {
   final String songTitle;
   final String artistName;
-  final AudioPlayer audioPlayer;
+  final VoidCallback onNextPressed;
+  final VoidCallback onPreviousPressed;
 
-  BottomControls(
-      {@required this.songTitle,
-      @required this.artistName,
-      @required this.audioPlayer});
+  BottomControls({
+    @required this.songTitle,
+    @required this.artistName,
+    @required this.onNextPressed,
+    @required this.onPreviousPressed,
+  })  : assert(onNextPressed != null),
+        assert(onPreviousPressed != null);
 
   @override
   BottomControlsState createState() => BottomControlsState();
@@ -19,6 +23,7 @@ class BottomControls extends StatefulWidget {
 class BottomControlsState extends State<BottomControls> {
   @override
   Widget build(BuildContext context) {
+    AudioPlayerBloc audioPlayerBloc = AudioPlayerProvider.of(context);
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -63,28 +68,18 @@ class BottomControlsState extends State<BottomControls> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                AudioPlaylistComponent(
-                  playlistBuilder:
-                      (BuildContext context, Playlist playlist, Widget child) {
-                    return IconButton(
-                      iconSize: 35.0,
-                      color: Colors.white,
-                      onPressed: playlist.previous,
-                      icon: Icon(Icons.skip_previous),
-                    );
-                  },
+                new IconButton(
+                  iconSize: 35.0,
+                  color: Colors.white,
+                  onPressed: widget.onPreviousPressed,
+                  icon: Icon(Icons.skip_previous),
                 ),
-                _buildPausePlayButton(widget.audioPlayer),
-                AudioPlaylistComponent(
-                  playlistBuilder:
-                      (BuildContext context, Playlist playlist, Widget child) {
-                    return IconButton(
-                      iconSize: 35.0,
-                      color: Colors.white,
-                      onPressed: playlist.next,
-                      icon: Icon(Icons.skip_next),
-                    );
-                  },
+                _buildPausePlayButton(audioPlayerBloc),
+                new IconButton(
+                  iconSize: 35.0,
+                  color: Colors.white,
+                  onPressed: widget.onNextPressed,
+                  icon: Icon(Icons.skip_next),
                 ),
               ],
             ),
@@ -94,7 +89,7 @@ class BottomControlsState extends State<BottomControls> {
     );
   }
 
-  Widget _buildPausePlayButton(AudioPlayer player) {
+  Widget _buildPausePlayButton(AudioPlayerBloc audioPlayerBloc) {
     ClipOval _buildCircularControlButton(
         {VoidCallback onPressed, IconData icon}) {
       return ClipOval(
@@ -113,21 +108,20 @@ class BottomControlsState extends State<BottomControls> {
       );
     }
 
-    if (player.state == AudioPlayerState.playing) {
-      return _buildCircularControlButton(
-          icon: Icons.pause, onPressed: player.pause);
-    } else if (player.state == AudioPlayerState.paused ||
-        player.state == AudioPlayerState.completed) {
-      return _buildCircularControlButton(
-          icon: Icons.play_arrow, onPressed: player.play);
-    } else {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 17.0, horizontal: 1.0),
-        child: Text(
-          "Buffering...",
-          style: TextStyle(color: Colors.white, fontSize: 16.0),
-        ),
-      );
-    }
+    return StreamBuilder(
+      stream: audioPlayerBloc.playerState,
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (!snapshot.hasData) {
+          return _buildCircularControlButton(
+              icon: Icons.play_arrow, onPressed: () {});
+        } else if (snapshot.data == "playing") {
+          return _buildCircularControlButton(
+              icon: Icons.pause, onPressed: audioPlayerBloc.pause);
+        } else {
+          return _buildCircularControlButton(
+              icon: Icons.play_arrow, onPressed: audioPlayerBloc.play);
+        }
+      },
+    );
   }
 }

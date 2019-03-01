@@ -158,7 +158,7 @@ class ArtistDetail extends StatelessWidget {
                 track: tracks[index],
                 onTap: () {
                   bloc.fetchArtistPlaylist(artistId);
-                  Navigator.of(context).pushNamed('/player/artist/$index');
+                  Navigator.of(context).pushNamed('/player/artist/$index/$artistId');
                 },
               ),
               Divider(

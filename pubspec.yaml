@@ -10,7 +10,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -24,7 +24,6 @@ dependencies:
   http:
   rxdart: ^0.20.0
   cached_network_image: ^0.5.1
-  fluttery_audio: 0.0.3
   firebase_admob: ^0.8.0+2
   firebase_core: ^0.2.5
   firebase_messaging: ^4.0.0+1
