@@ -6,7 +6,6 @@ import 'radial_drag_gesture_detector.dart';
 import '../Helpers/globals.dart';
 
 class RadialSeekBar extends StatefulWidget {
-  final double seekPercent;
   final double progress;
   final Function(double) onSeekRequested;
 
@@ -15,7 +14,6 @@ class RadialSeekBar extends StatefulWidget {
   const RadialSeekBar(
       {Key key,
       @required this.picture,
-      this.seekPercent = 0.0,
       this.progress = 0.0,
       this.onSeekRequested})
       : super(key: key);
@@ -71,8 +69,8 @@ class _RadialSeekBarState extends State<RadialSeekBar> {
     double thumbPosition = _progress;
     if (_currentDragPercent != null) {
       thumbPosition = _currentDragPercent;
-    } else if (widget.seekPercent != null) {
-      thumbPosition = widget.seekPercent;
+    } else if (widget.progress != null) {
+      thumbPosition = widget.progress;
     }
 
     return RadialDragGestureDetector(

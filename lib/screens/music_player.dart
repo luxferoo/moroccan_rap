@@ -40,8 +40,30 @@ class _MusicPlayerState extends State<MusicPlayer> {
         anchorOffset: 0.0,
       );
 
+    VoidCallback onNextPressed = () {
+      if (startAt < widget.trackList.length - 1) {
+        setState(() {
+          startAt++;
+          AudioPlayerProvider.of(context)
+              .startAudioService(track: widget.trackList[startAt]);
+        });
+      }
+    };
+
+    VoidCallback onPreviousPressed = () {
+      if (startAt != 0) {
+        setState(() {
+          startAt--;
+          AudioPlayerProvider.of(context)
+              .startAudioService(track: widget.trackList[startAt]);
+        });
+      }
+    };
+
     AudioPlayerProvider.of(context)
         .startAudioService(track: widget.trackList[startAt]);
+    AudioPlayerProvider.of(context).setOnCompletion(cb: onNextPressed);
+
     return new Scaffold(
       backgroundColor: Colors.black,
       body: DecoratedBox(
@@ -71,7 +93,8 @@ class _MusicPlayerState extends State<MusicPlayer> {
                         currentPosition = snapshot.data;
                       }
                       return new Text(
-                        currentPosition.toString(),
+                        formatDuration(
+                            new Duration(milliseconds: currentPosition)),
                         style: TextStyle(color: Colors.white),
                       );
                     },
@@ -89,7 +112,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
                         duration = snapshot.data;
                       }
                       return new Text(
-                        duration.toString(),
+                        formatDuration(new Duration(milliseconds: duration)),
                         style: TextStyle(color: Colors.white),
                       );
                     },
@@ -100,23 +123,8 @@ class _MusicPlayerState extends State<MusicPlayer> {
             BottomControls(
               songTitle: widget.trackList[startAt].name,
               artistName: widget.trackList[startAt].artistName,
-              onNextPressed: () {
-                setState(() {
-                  if (startAt < widget.trackList.length)
-                    ++startAt;
-                  else
-                    startAt = 0;
-                  AudioPlayerProvider.of(context)
-                      .startAudioService(track: widget.trackList[startAt]);
-                });
-              },
-              onPreviousPressed: () {
-                setState(() {
-                  if (startAt != 0) --startAt;
-                  AudioPlayerProvider.of(context)
-                      .startAudioService(track: widget.trackList[startAt]);
-                });
-              },
+              onNextPressed: onNextPressed,
+              onPreviousPressed: onPreviousPressed,
             )
           ],
         ),
@@ -135,6 +143,17 @@ class _MusicPlayerState extends State<MusicPlayer> {
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.of(context).pop();
+          }),
+      centerTitle: true,
+      title: new StreamBuilder(
+          stream: AudioPlayerProvider.of(context).bufferingValue,
+          builder:
+              (BuildContext context, AsyncSnapshot<int> bufferingSnapshot) {
+            String title = "";
+            if (bufferingSnapshot.hasData) {
+              title = "Buffering : ${bufferingSnapshot.data.toString()}%";
+            }
+            return Text(title,style: new TextStyle(fontSize: 14),);
           }),
     );
   }

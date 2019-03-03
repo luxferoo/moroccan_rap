@@ -20,6 +20,8 @@ import java.util.Map;
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
+import android.content.SharedPreferences;
+
 
 public class MainActivity extends FlutterActivity {
     private AudioService mService;
@@ -27,6 +29,7 @@ public class MainActivity extends FlutterActivity {
     private Boolean isPlaybackListener = false;
     private Handler playbackListenerHandler;
     private MethodChannel methodChannel;
+    private SharedPreferences sharedpreferences;
 
     private static final String CHANNEL = "com.luxfero.moroccanrap/audio_service";
     private ServiceConnection connection = new ServiceConnection() {
@@ -52,7 +55,7 @@ public class MainActivity extends FlutterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
-
+        sharedpreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
         methodChannel = new MethodChannel(getFlutterView(), CHANNEL);
 
         if (!isMyServiceRunning(AudioService.class))
@@ -67,10 +70,18 @@ public class MainActivity extends FlutterActivity {
                                 break;
                             case "startAudioService":
                                 try {
-                                    mService.setDataSource(((Map) call.arguments()).get("track").toString());
-                                    methodChannel.invokeMethod("onStateChanged", "playing");
-                                    //TODO implement callback
-                                    startPlaybackListener();
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    String trackId = ((Map) call.arguments()).get("id").toString();
+                                    String trackUrl = ((Map) call.arguments()).get("track").toString();
+                                    if (!sharedpreferences.getString("current_track_id", "").equals(trackId)) {
+                                        Log.d("khraaa",sharedpreferences.getString("current_track_id", "")+trackId);
+                                        mService.setDataSource(trackUrl);
+                                        methodChannel.invokeMethod("onStateChanged", "playing");
+                                        editor.putString("current_track_id", trackId);
+                                        editor.commit();
+                                        //TODO implement callback
+                                        startPlaybackListener();
+                                    }
                                     result.success(true);
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -150,6 +161,7 @@ public class MainActivity extends FlutterActivity {
                     if (isPlaybackListener) {
                         methodChannel.invokeMethod("onCurrentPositionChanged", mService.getCurrentPosition());
                         methodChannel.invokeMethod("duration", mService.getDuration());
+                        methodChannel.invokeMethod("onStateChanged", "playing");
                         playbackListenerHandler.postDelayed(this, 500);
                     }
                 }

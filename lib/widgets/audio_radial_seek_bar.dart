@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'radial_seek_bar.dart';
+import '../blocs/audio_player_provider.dart';
 
 class AudioRadialSeekBar extends StatefulWidget {
   final String picture;
@@ -11,25 +12,53 @@ class AudioRadialSeekBar extends StatefulWidget {
 }
 
 class _AudioRadialSeekBarState extends State<AudioRadialSeekBar> {
-  double _seekPercent;
+  double progress;
+  int duration = 0;
+  int currentPosition = 0;
+  int buffering = 0;
+
+  @override
+  bool get mounted => super.mounted;
 
   @override
   Widget build(BuildContext context) {
-    double playBackProgress = 0.0;
-    //_seekPercent = player.isSeeking ? _seekPercent : null;
+    AudioPlayerBloc audioPlayerBloc = AudioPlayerProvider.of(context);
+
+    audioPlayerBloc.duration.doOnData((data) {
+      if (mounted)
+        setState(() {
+          duration = data;
+        });
+    }).listen(null);
+
+    audioPlayerBloc.currentPosition.doOnData((data) {
+      if (mounted)
+        setState(() {
+          currentPosition = data;
+        });
+    }).listen(null);
+
+    audioPlayerBloc.bufferingValue.doOnData((data) {
+      if (mounted)
+        setState(() {
+          buffering = data;
+        });
+    }).listen(null);
+    if (currentPosition == 0 && duration == 0) {
+      progress = 0.0;
+    } else {
+      progress = currentPosition / duration;
+    }
     return RadialSeekBar(
       picture: widget.picture,
-      progress: playBackProgress,
-      seekPercent: _seekPercent,
+      progress: progress,
       onSeekRequested: (double seekPercent) {
-        setState(() {
-          _seekPercent = seekPercent;
-        });
-        /*final seekMillis =
-            (player.audioLength.inMilliseconds * seekPercent).round();
-        player.seek(Duration(milliseconds: seekMillis));*/
+        if (progress > 0) {
+          if (seekPercent < buffering / 100) {
+            audioPlayerBloc.seek((duration * seekPercent).toInt());
+          }
+        }
       },
     );
-    ;
   }
 }

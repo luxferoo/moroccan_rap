@@ -99,7 +99,8 @@ MaterialPageRoute routes(RouteSettings setting) {
 
             return new FutureBuilder(
               future: futureTrackList,
-              builder: (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Track>> snapshot) {
                 if (!snapshot.hasData) {
                   return new Scaffold(
                     backgroundColor: Colors.black,

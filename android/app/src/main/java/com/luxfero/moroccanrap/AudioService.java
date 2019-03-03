@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -54,14 +55,14 @@ public class AudioService extends Service {
     }
 
     public void setDataSource(String trackUrl) throws IOException {
-        mediaPlayer.setOnPreparedListener(mp -> {
-            ready = true;
-            play();
-        });
-        mediaPlayer.reset();
-        mediaPlayer.setDataSource(trackUrl);
-        ready = false;
-        mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(mp -> {
+                ready = true;
+                play();
+            });
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(trackUrl);
+            ready = false;
+            mediaPlayer.prepareAsync();
     }
 
 

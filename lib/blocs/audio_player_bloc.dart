@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
@@ -6,6 +8,9 @@ import '../models/track.dart';
 class AudioPlayerBloc {
   static MethodChannel platform =
       new MethodChannel('com.luxfero.moroccanrap/audio_service');
+
+  VoidCallback onCompletion;
+
   final BehaviorSubject<String> _stateListener = BehaviorSubject();
   final PublishSubject<int> _currentPositionListener = PublishSubject();
   final PublishSubject<int> _bufferingListener = PublishSubject();
@@ -28,6 +33,10 @@ class AudioPlayerBloc {
         _onSeekListener.add(arguments);
       }
 
+      if (methodName == "onCompletion") {
+        onCompletion();
+      }
+
       if (methodName == "duration") {
         _duration.add(arguments);
       }
@@ -36,6 +45,10 @@ class AudioPlayerBloc {
         _stateListener.add(arguments);
       }
     });
+  }
+
+  setOnCompletion({VoidCallback cb}) {
+    onCompletion = cb;
   }
 
   Observable<String> get playerState => _stateListener.stream;
@@ -55,9 +68,9 @@ class AudioPlayerBloc {
   }
 
   Future<void> startAudioService({@required Track track}) async {
-    try {
-      await platform.invokeMethod("startAudioService", track.toMap());
-    } on PlatformException catch (e) {}
+      try {
+        await platform.invokeMethod("startAudioService", track.toMap());
+      } on PlatformException catch (e) {}
   }
 
   play() async {
