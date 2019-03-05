@@ -67,9 +67,9 @@ class AudioPlayerBloc {
     } on PlatformException catch (e) {}
   }
 
-  Future<void> startAudioService({@required Track track}) async {
+  Future<void> loadAudio({@required List<Track> tracks, int startAt = 0}) async {
       try {
-        await platform.invokeMethod("startAudioService", track.toMap());
+        await platform.invokeMethod("setPlaylist");
       } on PlatformException catch (e) {}
   }
 
@@ -82,6 +82,18 @@ class AudioPlayerBloc {
   pause() async {
     try {
       await platform.invokeMethod("pause");
+    } on PlatformException catch (e) {}
+  }
+
+  next() async {
+    try {
+      await platform.invokeMethod("next");
+    } on PlatformException catch (e) {}
+  }
+
+  previous() async {
+    try {
+      await platform.invokeMethod("previous");
     } on PlatformException catch (e) {}
   }
 

@@ -11,16 +11,13 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
-import android.content.SharedPreferences;
 
 
 public class MainActivity extends FlutterActivity {
@@ -29,7 +26,10 @@ public class MainActivity extends FlutterActivity {
     private Boolean isPlaybackListener = false;
     private Handler playbackListenerHandler;
     private MethodChannel methodChannel;
-    private SharedPreferences sharedpreferences;
+
+    public static final String Broadcast_PLAY_NEW_AUDIO = "com.example.luxfero.mymediaplayer.PlayNewAudio";
+    ArrayList<Audio> audioList = new ArrayList<>();
+
 
     private static final String CHANNEL = "com.luxfero.moroccanrap/audio_service";
     private ServiceConnection connection = new ServiceConnection() {
@@ -55,26 +55,30 @@ public class MainActivity extends FlutterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GeneratedPluginRegistrant.registerWith(this);
-        sharedpreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
         methodChannel = new MethodChannel(getFlutterView(), CHANNEL);
 
-        if (!isMyServiceRunning(AudioService.class))
-            startService(new Intent(this, AudioService.class));
+        /*if (!isMyServiceRunning(AudioService.class))
+            startService(new Intent(this, AudioService.class));*/
 
         methodChannel.setMethodCallHandler(
                 (call, result) -> {
-                    if (mBound) {
-                        switch (call.method) {
-                            case "ping":
-                                startPlaybackListener();
-                                break;
-                            case "startAudioService":
+                    switch (call.method) {
+                        case "ping":
+                            //startPlaybackListener();
+                            break;
+                        case "setPlaylist":
+                            setPlaylist();
+                            playAudio(0);
+                            startPlaybackListener();
+                            methodChannel.invokeMethod("onStateChanged", "playing");
+                            break;
+                            /*case "startAudioService":
                                 try {
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
                                     String trackId = ((Map) call.arguments()).get("id").toString();
                                     String trackUrl = ((Map) call.arguments()).get("track").toString();
                                     if (!sharedpreferences.getString("current_track_id", "").equals(trackId)) {
-                                        Log.d("khraaa",sharedpreferences.getString("current_track_id", "")+trackId);
+                                        Log.d("khraaa", sharedpreferences.getString("current_track_id", "") + trackId);
                                         mService.setDataSource(trackUrl);
                                         methodChannel.invokeMethod("onStateChanged", "playing");
                                         editor.putString("current_track_id", trackId);
@@ -87,31 +91,39 @@ public class MainActivity extends FlutterActivity {
                                     e.printStackTrace();
                                 }
                                 break;
-                            case "play":
-                                mService.play();
-                                methodChannel.invokeMethod("onStateChanged", "playing");
-                                startPlaybackListener();
-                                result.success(true);
-                                break;
-                            case "pause":
-                                mService.pause();
-                                methodChannel.invokeMethod("onStateChanged", "paused");
-                                stopPlaybackListening();
-                                result.success(true);
-                                break;
-                            case "stop":
-                                mService.stop();
-                                methodChannel.invokeMethod("onStateChanged", "stopped");
-                                stopPlaybackListening();
-                                result.success(true);
-                                break;
-                            case "seek":
-                                mService.seek(call.arguments());
-                                result.success(true);
-                                break;
-                            default:
-                                result.notImplemented();
-                        }
+                                */
+                        case "play":
+                            mService.play();
+                            methodChannel.invokeMethod("onStateChanged", "playing");
+                            startPlaybackListener();
+                            result.success(true);
+                            break;
+                        case "pause":
+                            mService.pause();
+                            methodChannel.invokeMethod("onStateChanged", "paused");
+                            stopPlaybackListening();
+                            result.success(true);
+                            break;
+                        case "next":
+                            mService.next();
+                            result.success(true);
+                            break;
+                        case "previous":
+                            mService.previous();
+                            result.success(true);
+                            break;
+                        case "stop":
+                            mService.stop();
+                            methodChannel.invokeMethod("onStateChanged", "stopped");
+                            stopPlaybackListening();
+                            result.success(true);
+                            break;
+                        case "seek":
+                            mService.seek(call.arguments());
+                            result.success(true);
+                            break;
+                        default:
+                            result.notImplemented();
                     }
                 });
     }
@@ -137,16 +149,6 @@ public class MainActivity extends FlutterActivity {
         });
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void stopPlaybackListening() {
         isPlaybackListener = false;
         playbackListenerHandler.removeCallbacks(null);
@@ -159,27 +161,61 @@ public class MainActivity extends FlutterActivity {
                 @Override
                 public void run() {
                     if (isPlaybackListener) {
-                        methodChannel.invokeMethod("onCurrentPositionChanged", mService.getCurrentPosition());
-                        methodChannel.invokeMethod("duration", mService.getDuration());
-                        methodChannel.invokeMethod("onStateChanged", "playing");
-                        playbackListenerHandler.postDelayed(this, 500);
+                        try {
+                            methodChannel.invokeMethod("onCurrentPositionChanged", mService.getCurrentPosition());
+                            methodChannel.invokeMethod("duration", mService.getDuration());
+                            methodChannel.invokeMethod("onStateChanged", "playing");
+                            playbackListenerHandler.postDelayed(this, 500);
+                        } catch (IllegalStateException ignored) {
+
+                        }
                     }
                 }
             }, 500);
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = new Intent(this, AudioService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    private void setPlaylist() {
+        audioList.add(new Audio("http://206.189.15.19/stream/1551091658105.mp3", "title1", "album1", "artist1"));
+        audioList.add(new Audio("http://206.189.15.19/stream/1550490442581.mp3", "title", "album", "artist"));
+    }
+
+    private void playAudio(int audioIndex) {
+        //Check is service is active
+        if (mService == null) {
+            StorageUtil storage = new StorageUtil(getApplicationContext());
+            storage.storeAudio(audioList);
+            storage.storeAudioIndex(audioIndex);
+            Intent playerIntent = new Intent(this, AudioService.class);
+            startService(playerIntent);
+            bindService(playerIntent, connection, Context.BIND_AUTO_CREATE);
+        } else {
+            StorageUtil storage = new StorageUtil(getApplicationContext());
+            storage.storeAudioIndex(audioIndex);
+            Intent broadcastIntent = new Intent(Broadcast_PLAY_NEW_AUDIO);
+            sendBroadcast(broadcastIntent);
+        }
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        unbindService(connection);
-        mBound = false;
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("ServiceState", mBound);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mBound = savedInstanceState.getBoolean("ServiceState");
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mBound) {
+            mBound = false;
+            unbindService(connection);
+        }
     }
 }

@@ -33,7 +33,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    myInterstitial
+    /myInterstitial
       ..load()
       ..show(
         anchorType: AnchorType.bottom,
@@ -44,8 +44,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
       if (startAt < widget.trackList.length - 1) {
         setState(() {
           startAt++;
-          AudioPlayerProvider.of(context)
-              .startAudioService(track: widget.trackList[startAt]);
+          AudioPlayerProvider.of(context).previous();
         });
       }
     };
@@ -54,14 +53,13 @@ class _MusicPlayerState extends State<MusicPlayer> {
       if (startAt != 0) {
         setState(() {
           startAt--;
-          AudioPlayerProvider.of(context)
-              .startAudioService(track: widget.trackList[startAt]);
+          AudioPlayerProvider.of(context).previous();
         });
       }
     };
 
     AudioPlayerProvider.of(context)
-        .startAudioService(track: widget.trackList[startAt]);
+        .loadAudio(tracks: widget.trackList, startAt: startAt);
     AudioPlayerProvider.of(context).setOnCompletion(cb: onNextPressed);
 
     return new Scaffold(
