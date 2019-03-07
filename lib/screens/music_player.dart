@@ -33,18 +33,23 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    /myInterstitial
+    /* myInterstitial
       ..load()
       ..show(
         anchorType: AnchorType.bottom,
         anchorOffset: 0.0,
       );
-
+*/
     VoidCallback onNextPressed = () {
       if (startAt < widget.trackList.length - 1) {
         setState(() {
           startAt++;
-          AudioPlayerProvider.of(context).previous();
+          AudioPlayerProvider.of(context).next();
+        });
+      }else {
+        setState(() {
+          startAt = 0;
+          AudioPlayerProvider.of(context).next();
         });
       }
     };
@@ -58,9 +63,38 @@ class _MusicPlayerState extends State<MusicPlayer> {
       }
     };
 
-    AudioPlayerProvider.of(context)
-        .loadAudio(tracks: widget.trackList, startAt: startAt);
-    AudioPlayerProvider.of(context).setOnCompletion(cb: onNextPressed);
+    AudioPlayerProvider.of(context).setPlaylist(
+        tracks: widget.trackList.map((track) => track.toMap()).toList(),
+        startAt: startAt);
+    AudioPlayerProvider.of(context).setOnCompletion(cb: () {
+      if (startAt < widget.trackList.length - 1) {
+        setState(() {
+          startAt++;
+        });
+      }else {
+        setState(() {
+          startAt = 0;
+        });
+      }
+    });
+    AudioPlayerProvider.of(context).setOnNext(cb: () {
+      if (startAt < widget.trackList.length - 1) {
+        setState(() {
+          startAt++;
+        });
+      }else {
+        setState(() {
+          startAt = 0;
+        });
+      }
+    });
+    AudioPlayerProvider.of(context).setOnPrevious(cb: () {
+      if (startAt != 0) {
+        setState(() {
+          startAt--;
+        });
+      }
+    });
 
     return new Scaffold(
       backgroundColor: Colors.black,
@@ -151,7 +185,10 @@ class _MusicPlayerState extends State<MusicPlayer> {
             if (bufferingSnapshot.hasData) {
               title = "Buffering : ${bufferingSnapshot.data.toString()}%";
             }
-            return Text(title,style: new TextStyle(fontSize: 14),);
+            return Text(
+              title,
+              style: new TextStyle(fontSize: 14),
+            );
           }),
     );
   }

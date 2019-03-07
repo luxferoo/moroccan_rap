@@ -9,9 +9,13 @@ class AudioPlayerBloc {
   static MethodChannel platform =
       new MethodChannel('com.luxfero.moroccanrap/audio_service');
 
-  VoidCallback onCompletion;
+  VoidCallback _onCompletion;
+  VoidCallback _onNext;
+  VoidCallback _onPrevious;
+  VoidCallback _onPause;
+  VoidCallback _onPlay;
 
-  final BehaviorSubject<String> _stateListener = BehaviorSubject();
+  final PublishSubject<String> _stateListener = PublishSubject();
   final PublishSubject<int> _currentPositionListener = PublishSubject();
   final PublishSubject<int> _bufferingListener = PublishSubject();
   final PublishSubject<int> _onSeekListener = PublishSubject();
@@ -34,7 +38,7 @@ class AudioPlayerBloc {
       }
 
       if (methodName == "onCompletion") {
-        onCompletion();
+        _onCompletion();
       }
 
       if (methodName == "duration") {
@@ -44,11 +48,51 @@ class AudioPlayerBloc {
       if (methodName == "onStateChanged") {
         _stateListener.add(arguments);
       }
+
+      if (methodName == "onNext") {
+        _onNext();
+      }
+
+      if (methodName == "onPrevious") {
+        _onPrevious();
+      }
+
+      if (methodName == "onPause") {
+        _onPause();
+        _stateListener.add("paused");
+      }
+
+      if (methodName == "onPlay") {
+        _onPlay();
+        _stateListener.add("playing");
+      }
+
+      if (methodName == "onStop") {
+        _onPause();
+        _stateListener.add("stoped");
+      }
+
     });
   }
 
   setOnCompletion({VoidCallback cb}) {
-    onCompletion = cb;
+    _onCompletion = cb;
+  }
+
+  setOnNext({VoidCallback cb}) {
+    _onNext = cb;
+  }
+
+  setOnPrevious({VoidCallback cb}) {
+    _onPrevious = cb;
+  }
+
+  setOnPause({VoidCallback cb}) {
+    _onPause = cb;
+  }
+
+  setOnPlay({VoidCallback cb}) {
+    _onPlay = cb;
   }
 
   Observable<String> get playerState => _stateListener.stream;
@@ -67,21 +111,26 @@ class AudioPlayerBloc {
     } on PlatformException catch (e) {}
   }
 
-  Future<void> loadAudio({@required List<Track> tracks, int startAt = 0}) async {
-      try {
-        await platform.invokeMethod("setPlaylist");
-      } on PlatformException catch (e) {}
+  Future<void> setPlaylist(
+      {@required List<Map> tracks, int startAt = 0}) async {
+    try {
+      await platform.invokeMethod("setStartAt", startAt);
+      await platform.invokeMethod("setPlaylist", tracks);
+      _stateListener.add("playing");
+    } on PlatformException catch (e) {}
   }
 
   play() async {
     try {
       await platform.invokeMethod("play");
+      _stateListener.add("playing");
     } on PlatformException catch (e) {}
   }
 
   pause() async {
     try {
       await platform.invokeMethod("pause");
+      _stateListener.add("paused");
     } on PlatformException catch (e) {}
   }
 
@@ -100,6 +149,7 @@ class AudioPlayerBloc {
   stop() async {
     try {
       await platform.invokeMethod("stop");
+      _stateListener.add("stoped");
     } on PlatformException catch (e) {}
   }
 

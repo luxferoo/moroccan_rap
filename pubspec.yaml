@@ -24,7 +24,7 @@ dependencies:
   http:
   rxdart: ^0.20.0
   cached_network_image: ^0.5.1
-  firebase_admob: ^0.8.0+2
+  firebase_admob: ^0.8.0+3
   firebase_core: ^0.2.5
   firebase_messaging: ^4.0.0+1
   flutter_localizations:
