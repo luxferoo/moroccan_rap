@@ -269,11 +269,11 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     private void updateMetaData() {
-        Bitmap albumArt = BitmapFactory.decodeResource(getResources(),
-                R.drawable.musique_icon); //replace with medias albumArt
+       /* Bitmap albumArt = BitmapFactory.decodeResource(getResources(),
+                R.mipmap.ic_notification); */
         // Update the current metadata
         mediaSession.setMetadata(new MediaMetadata.Builder()
-                .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, albumArt)
+                //.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, albumArt)
                 .putString(MediaMetadata.METADATA_KEY_ARTIST, activeAudio.getArtist())
                 .putString(MediaMetadata.METADATA_KEY_TITLE, activeAudio.getTitle())
                 .putString(MediaMetadata.METADATA_KEY_ALBUM, activeAudio.getAlbum())
@@ -357,10 +357,11 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     public void onCompletion(MediaPlayer mp) {
         //    stopMedia();
         //  stopSelf();
+        transportControls.skipToNext();
         onCompletionListener.execute();
     }
 
-    public void setOnCompletionListener(OnCompletionListener listener){
+    public void setOnCompletionListener(OnCompletionListener listener) {
         onCompletionListener = listener;
     }
 
@@ -431,9 +432,9 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
                 // Lost focus for an unbounded amount of time: stop playback and release media player
-                //if (mediaPlayer.isPlaying()) mediaPlayer.stop();
-                // mediaPlayer.release();
-                //mediaPlayer = null;
+                if (mediaPlayer.isPlaying()) mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
                 break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 // Lost focus for a short time, but we have to stop
@@ -518,13 +519,11 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
             //create the play action
             play_pauseAction = playbackAction(0);
         }
+        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-                R.mipmap.ic_launcher); //replace with your own image
-
-
-        // Create a new Notification
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setShowWhen(false)
                 // Set the Notification style
                 .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
@@ -532,15 +531,14 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
                         .setMediaSession(MediaSessionCompat.Token.fromToken(mediaSession.getSessionToken()))
                         // Show our playback controls in the compact notification view.
                         .setShowActionsInCompactView(0, 1, 2))
-                // Set the Notification color
                 .setColor(getResources().getColor(android.R.color.white))
-                // Set the large and small icons
-                .setLargeIcon(largeIcon)
                 .setSmallIcon(android.R.drawable.stat_sys_headset)
+
                 // Set Notification content information
                 .setContentText(activeAudio.getArtist())
                 .setContentTitle(activeAudio.getAlbum())
                 .setContentInfo(activeAudio.getTitle())
+                .setContentIntent(contentIntent)
                 // Add playback actions
                 .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
@@ -549,12 +547,17 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     "Jinzo",
-                    NotificationManager.IMPORTANCE_HIGH);
+                    NotificationManager.IMPORTANCE_LOW);
+            channel.setSound(null, null);
+            channel.setVibrationPattern(null);
             notificationManager.createNotificationChannel(channel);
             notificationBuilder.setChannelId(CHANNEL_ID);
         }
         Notification notification = notificationBuilder.build();
-        notification.color = getResources().getColor(android.R.color.holo_orange_light);
+        if (playbackStatus == PlaybackStatus.PLAYING) {
+            notification.flags = Notification.FLAG_ONGOING_EVENT;
+        }
+        notification.color = getResources().getColor(android.R.color.white);
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
@@ -663,7 +666,7 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     public void onDestroy() {
         super.onDestroy();
         if (mediaPlayer != null) {
-            stopMedia();
+            //stopMedia();
             mediaPlayer.release();
             removeAudioFocus();
             //Disable the PhoneStateListener

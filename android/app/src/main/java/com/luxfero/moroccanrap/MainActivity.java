@@ -46,7 +46,9 @@ public class MainActivity extends FlutterActivity {
             handlerThread.start();
             playbackListenerHandler = new Handler(handlerThread.getLooper());
             mService.setOnBufferingUpdate((mp, percent) -> methodChannel.invokeMethod("onBufferingUpdate", percent));
-            mService.setOnCompletionListener(() -> methodChannel.invokeMethod("onNext", null));
+            mService.setOnCompletionListener(() -> {
+                methodChannel.invokeMethod("onNext", null);
+            });
             mService.setOnTransportControlsClicked(new AudioService.OnTransportControlsClicked() {
                 @Override
                 public void next() {
@@ -177,7 +179,6 @@ public class MainActivity extends FlutterActivity {
         ArrayList<Audio> currentPlayList = storage.loadAudio();
         if (currentPlayList != null && currentPlayList.size() > audioIndex) {
             if (audioList.get(audioIndex).getData().equals(currentPlayList.get(audioIndex).getData()) && storage.loadAudioIndex() == audioIndex) {
-                Log.e(audioList.get(audioIndex).getData(), currentPlayList.get(audioIndex).getData());
                 return;
             }
         }
