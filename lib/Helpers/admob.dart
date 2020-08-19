@@ -7,8 +7,7 @@ MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
 );
 
 BannerAd myBanner = BannerAd(
-  adUnitId: "your_id",
-  //adUnitId: BannerAd.testAdUnitId,
+  adUnitId: BannerAd.testAdUnitId,
   size: AdSize.fullBanner,
   targetingInfo: targetingInfo,
   listener: (MobileAdEvent event) {
@@ -17,8 +16,7 @@ BannerAd myBanner = BannerAd(
 );
 
 InterstitialAd myInterstitial = InterstitialAd(
-  adUnitId: "your_id",
-  //adUnitId: InterstitialAd.testAdUnitId,
+  adUnitId: InterstitialAd.testAdUnitId,
   targetingInfo: targetingInfo,
   listener: (MobileAdEvent event) {
     //print("InterstitialAd event is $event");
