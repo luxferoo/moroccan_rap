@@ -7,7 +7,7 @@ MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
 );
 
 BannerAd myBanner = BannerAd(
-  adUnitId: "ca-app-pub-2362392610669971/9288079691",
+  adUnitId: "your_id",
   //adUnitId: BannerAd.testAdUnitId,
   size: AdSize.fullBanner,
   targetingInfo: targetingInfo,
@@ -17,7 +17,7 @@ BannerAd myBanner = BannerAd(
 );
 
 InterstitialAd myInterstitial = InterstitialAd(
-  adUnitId: "ca-app-pub-2362392610669971/8135366858",
+  adUnitId: "your_id",
   //adUnitId: InterstitialAd.testAdUnitId,
   targetingInfo: targetingInfo,
   listener: (MobileAdEvent event) {
