@@ -9,7 +9,7 @@ class Globals {
   String artistsRoot = 'http://www.imamharir.com/api/artists';
   String serverPath = 'http://www.imamharir.com/';
   String trackStreamPath = 'http://www.imamharir.com/stream/';
-  String appKey = 'oF52iOAQNd63Lg9GP5zQkmntmwB1Nf6m';
+  String appKey = 'your_app_key';
 
   Globals._internal();
 }
